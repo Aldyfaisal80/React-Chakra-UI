@@ -17,10 +17,6 @@ export const router = createBrowserRouter([
                 index: true,
                 element: <Home />
             },
-            {
-                path: '/products',
-                element: <Products />
-            }
         ]
     },
     {
@@ -32,7 +28,7 @@ export const router = createBrowserRouter([
                 element: <Dashboard />
             },
             {
-                path: 'products',
+                path: '/products',
                 element: <Products />
             }
         ]
