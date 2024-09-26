@@ -18,8 +18,8 @@ export default function Navbar() {
                     <Link to={"/"}>APP MARKET</Link>
                 </Flex>
                 <Flex alignItems={"center"} gap={"4"}>
-                    <ButtonPrimary text={"Login"} to={"/login"}/>
-                    <ButtonPrimary text={"Register"} to={"/register"}/>
+                    <ButtonPrimary text={"Login"} to={"auth/login"}/>
+                    <ButtonPrimary text={"Register"} to={"auth/register"}/>
                 </Flex>
             </Flex>
         </Box>
