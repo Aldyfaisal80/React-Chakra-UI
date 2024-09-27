@@ -1,13 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "./components/layouts/MainLayout";
 import Home from "./pages/guest/Home";
-import Products from "./pages/guest/Products";
-import AdmindProducts from "./pages/admin/products/Products"
+import Products from "./pages/guest/Etalase";
+import AdminProducts from "./pages/admin/products/Products"
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
 import AuthLayouts from "./components/layouts/AuthLayouts";
 import Login from "./pages/auth/login/Index";
 import Register from "./pages/auth/register/Index";
+import Etalase from "./pages/guest/Etalase";
 
 export const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
                 index: true,
                 element: <Home />
             },
+            {
+                path: '/etalase',
+                element: <Etalase />
+            }
         ]
     },
     {
@@ -29,12 +34,12 @@ export const router = createBrowserRouter([
                 element: <Dashboard />
             },
             {
-                path: 'products',
+                path: '/dashboard/products',
                 element: <Products />
             },
             {
-                path: 'productsAdmin',
-                element: <AdmindProducts />
+                path: '/dashboard/productsAdmin',
+                element: <AdminProducts />
             }
         ]
     },
