@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
-import { type Categories, type State } from "../../types/Type";
-import axiosIntance from "../../libs/axios";
-
-export const useCategory = (limit: number, page: number) => {
+import { useEffect, useState } from "react"
+import axiosIntance from "../../libs/axios"
+import { State, type Products } from "../../types/Type"
+export const useProducts = (limit: number, page: number) => {
     const [state, setState] = useState<State>({
-        data: [] as Categories[],
+        data: [] as Products[],
         isLoading: true,
         error: null,
         totalPages: 1,
     });
-    
+
     useEffect(() => {
-        const fetchCategories = async () => {
+        const fetchProducts = async () => {
             setState((prev) => ({ ...prev, isLoading: true, error: null }));
-    
+
             try {
-                const response = await axiosIntance.get(`/categories`, {
+                const response = await axiosIntance.get(`/products`, {
                     params: { limit, page },
                 });
                 setState({
@@ -25,7 +24,7 @@ export const useCategory = (limit: number, page: number) => {
                     totalPages: Math.ceil(response.data.data.total / limit),
                 });
             } catch (error) {
-                setState((prev  ) => ({
+                setState((prev) => ({
                     ...prev,
                     isLoading: false,
                     error: error instanceof Error ? error.message : "An error occurred",
@@ -33,7 +32,7 @@ export const useCategory = (limit: number, page: number) => {
                 }));
             }
         };
-        fetchCategories();
-    }, [limit, page]);
-        return state
-      }
+        fetchProducts();
+    }, [limit, page,]);
+    return state
+}

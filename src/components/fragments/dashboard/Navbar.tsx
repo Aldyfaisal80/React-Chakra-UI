@@ -17,7 +17,7 @@ export default function NavbarCopy() {
                     <Link to={"/"}>DASHBOARD</Link>
                 </Flex>
                 <Flex alignItems={"center"} gap={"4"} fontSize={"2xl"} fontWeight={"bold"}>
-                    <Link to={"/dashboard/products"}>Products</Link>
+                    <Link to={"/dashboard/productsAdmin"}>Products Admin</Link>
                     <Link to={"/dashboard/category"}>Category</Link>
                 </Flex>
             </Flex>
