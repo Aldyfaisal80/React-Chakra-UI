@@ -7,6 +7,7 @@ import Dashboard from "./pages/admin/dashboard/Dashboard";
 import AuthLayouts from "./components/layouts/AuthLayouts";
 import Login from "./pages/auth/login/Index";
 import Register from "./pages/auth/register/Index";
+import Etalase from "./pages/guest/Etalase";
 
 export const router = createBrowserRouter([
     {
