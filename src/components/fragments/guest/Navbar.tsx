@@ -19,7 +19,7 @@ export default function Navbar() {
                 </Flex>
                 <Flex alignItems={"center"} gap={"4"}>
                     <ButtonPrimary text={"Login"} to={"auth/login"}/>
-                    <ButtonPrimary text={"Register"} to={"auth/register"}/>
+                    <ButtonPrimary text={"Register"} to={"/register"}/>
                 </Flex>
             </Flex>
         </Box>

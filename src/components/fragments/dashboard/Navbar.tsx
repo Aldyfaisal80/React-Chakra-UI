@@ -11,7 +11,7 @@ export default function NavbarCopy() {
                         <MenuButton as={IconButton} icon={<TiThMenu />} fontSize={"2xl"} fontWeight={"bold"} border={"none"} variant="outline" aria-label="Menu" />
                         <MenuList>
                             <MenuItem as={Link} to="/">Home</MenuItem>
-                            <MenuItem as={Link} to="/dashboard/products">Products</MenuItem>
+                            <MenuItem as={Link} to="products">Products</MenuItem>
                         </MenuList>
                     </Menu>
                     <Link to={"/"}>DASHBOARD</Link>
