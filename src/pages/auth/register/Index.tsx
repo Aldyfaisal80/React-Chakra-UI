@@ -5,7 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 export default function Register() {
   return (
-    <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} bg={"#d5d5d5"}>
+    <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} bg={"#F8F7F3"}>
       <Button
         as={RouterLink}
         to={"/"}
