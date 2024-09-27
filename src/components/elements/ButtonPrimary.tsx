@@ -19,12 +19,12 @@ const ButtonPrimary = ({ text, to, ...props }: ButtonPrimaryProps) => {
             fontSize={"xl"}
             fontWeight={"bold"}
             padding="2.5"
-            bg="#FFB344"
+            bg="#FF9900"
+            borderRadius={"unset"}
             _hover={{
                 bg: "#FFAB2C",
                 boxShadow: "4px 4px 0px rgba(0, 0, 0, 1)",
             }}
-            borderRadius="1rem"
             {...props}
         >
             {text}

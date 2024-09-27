@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "./components/layouts/MainLayout";
 import Home from "./pages/guest/Home";
-import Products from "./pages/guest/Etalase";
 import AdminProducts from "./pages/admin/products/Products"
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
@@ -19,10 +18,6 @@ export const router = createBrowserRouter([
                 index: true,
                 element: <Home />
             },
-            {
-                path: '/etalase',
-                element: <Etalase />
-            }
         ]
     },
     {
@@ -32,10 +27,6 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <Dashboard />
-            },
-            {
-                path: '/dashboard/products',
-                element: <Products />
             },
             {
                 path: '/dashboard/productsAdmin',
