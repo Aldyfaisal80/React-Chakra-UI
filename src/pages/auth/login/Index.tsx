@@ -32,25 +32,32 @@ export default function Login() {
         <Input
           placeholder="Email"
           border={"2px solid black"}
+          boxShadow="5px 5px 0px black"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
           _hover={{
-            bg: "gray.200",
-            boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)",
+            transform: 'translate(5px, 5px)',
+            boxShadow: '0px 0px 0px black',
           }}
         />
         <Input
           placeholder="Password"
           type="password"
           border={"2px solid black"}
+          boxShadow="5px 5px 0px black"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
           _hover={{
-            bg: "gray.200",
-            boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)",
+            transform: 'translate(5px, 5px)',
+            boxShadow: '0px 0px 0px black',
           }}
         />
         <Button
           type="submit"
           bg={"#ffb747"}
+          boxShadow="5px 5px 0px black"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
           _hover={{
-            boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)",
+            transform: 'translate(5px, 5px)',
+            boxShadow: '0px 0px 0px black',
           }}
         >
           Login
