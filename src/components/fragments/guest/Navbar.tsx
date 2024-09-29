@@ -5,8 +5,8 @@ import ButtonPrimary from "../../elements/ButtonPrimary";
 
 export default function Navbar() {
     return (
-        <Box w={"100%"} h={"70px"} borderBottom={"2px"} borderColor={"gray.600"}>
-            <Flex w={"1400px"} h={"100%"} p={"4"} mx={"auto"} justifyContent={"space-between"} alignItems={"center"} borderX={"2px"} borderColor={"gray.600"} color={"gray.600"}>
+        <Box w={"100%"} h={"70px"} borderBottom={"2px"} borderColor={"black"}>
+            <Flex w={"1400px"} h={"100%"} p={"4"} mx={"auto"} justifyContent={"space-between"} alignItems={"center"} borderX={"2px"} borderColor={"black"} color={"black"}>
                 <Flex alignItems={"center"} gap={"4"} fontSize={"2xl"} fontWeight={"bold"}>
                     <Menu>
                         <MenuButton as={IconButton} icon={<TiThMenu />} fontSize={"2xl"} fontWeight={"bold"} border={"none"} variant="outline" aria-label="Menu" />
