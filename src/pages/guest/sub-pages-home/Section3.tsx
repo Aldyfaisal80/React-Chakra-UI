@@ -2,6 +2,7 @@ import { Box, Button, Flex, Grid, GridItem, Image, Text, Spinner, Alert, Heading
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import { useProducts } from "../../../features/product";
+import ButtonCard from "../../../components/elements/ButtonCard";
 
 export default function Section3() {
     const [page, setPage] = useState(1);
@@ -40,12 +41,8 @@ export default function Section3() {
                                     <Text mt={2} fontWeight="bold" fontSize="xl">{product.name}</Text>
                                     <Text fontSize="lg">Price: ${product.price}</Text>
                                     <Box display="flex" justifyContent="space-between" mt={4} gap={2} borderTop="2px solid black">
-                                        <Button as={RouterLink} to={`/products/${product.id}`} mt={2} bg="#FF9900" borderRadius={"unset"} _hover={{ boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)", }}>
-                                            Details
-                                        </Button>
-                                        <Button as={RouterLink} to={`/`} mt={2} bg="#FF9900" borderRadius={"unset"} _hover={{ boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)", }}>
-                                            Add to cart
-                                        </Button>
+                                        <ButtonCard as={RouterLink} to={`/products/${product.id}`} text="Details" />
+                                        <ButtonCard as={RouterLink} to={`/`} text="Add to Cart" />
                                     </Box>
                                 </Box>
                             </Box>
