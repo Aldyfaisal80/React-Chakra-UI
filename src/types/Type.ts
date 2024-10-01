@@ -10,17 +10,24 @@ export type Products = {
     description: string;
     categories: Categories[]
 }
+export type Categories = {
+    id?: string,
+    name: string,
+    description: string
+    products: Products[]
+}
 
 export type State = {
     data: Products[];
     isLoading: boolean;
     error: string | null;
     totalPages?: number;
+    
 }
 
-export type Categories = {
-    id?: string,
-    name: string,
-    description: string
-    products: Products[]
+export type StateCategory = {
+    data: Categories[];
+    isLoading: boolean;
+    error: string | null;
+    totalPages?: number;
 }

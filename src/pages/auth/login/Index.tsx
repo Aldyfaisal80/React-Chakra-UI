@@ -1,5 +1,5 @@
 import { ExternalLinkIcon, ArrowBackIcon } from "@chakra-ui/icons";
-import { Button, Flex, FormControl, Input, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, Input, Link, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 export default function Login() {
@@ -14,6 +14,16 @@ export default function Login() {
         top={"20px"}
         left={"20px"}
         leftIcon={<ArrowBackIcon />}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"} 
+        w={"70px"}
+        h={"50px"}
+        boxShadow={"4px 4px 0px 0px rgba(0, 0, 0, 1)"}
+        _hover={{
+          transform: 'translate(4px, 4px)',
+          boxShadow: '0px 0px 0px rgba(0, 0, 0, 1)',
+        }}
       />
       <FormControl
         display="flex"
@@ -32,25 +42,32 @@ export default function Login() {
         <Input
           placeholder="Email"
           border={"2px solid black"}
+          boxShadow="5px 5px 0px black"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
           _hover={{
-            bg: "gray.200",
-            boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)",
+            transform: 'translate(5px, 5px)',
+            boxShadow: '0px 0px 0px black',
           }}
         />
         <Input
           placeholder="Password"
           type="password"
           border={"2px solid black"}
+          boxShadow="5px 5px 0px black"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
           _hover={{
-            bg: "gray.200",
-            boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)",
+            transform: 'translate(5px, 5px)',
+            boxShadow: '0px 0px 0px black',
           }}
         />
         <Button
           type="submit"
           bg={"#ffb747"}
+          boxShadow="5px 5px 0px black"
+          transition="transform 0.2s ease, box-shadow 0.2s ease"
           _hover={{
-            boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)",
+            transform: 'translate(5px, 5px)',
+            boxShadow: '0px 0px 0px black',
           }}
         >
           Login
