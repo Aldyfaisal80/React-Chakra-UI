@@ -1,12 +1,15 @@
-import { Box, Button, Flex, Grid, GridItem, Image, Text, Spinner, Alert } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Checkbox, Stack, Select, Input, Icon, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import { useProducts } from "../../../features/product";
-
+import ButtonCard from "../../../components/elements/ButtonCard";
+import { FaArrowDown, FaSearch } from "react-icons/fa";
 
 export default function Products() {
   const [page, setPage] = useState(1);
   const { data, isLoading, error, totalPages } = useProducts(10, page);
+
+  const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
 
   if (isLoading) {
     return (
@@ -24,40 +27,84 @@ export default function Products() {
     );
   }
 
-
   return (
     <>
-      <Flex w="100%" h="max-content" justifyContent="center" alignItems="center">
-        <Grid templateColumns="repeat(5, 1fr)" w="80%" h="fit-content" mt="40px" gap={6} justifyContent="center" mx="auto">
-          {data.map((product) => (
-            <GridItem key={product.id} w="100%" h="auto" border="2px solid black" _hover={{ boxShadow: "8px 8px 0px 0px rgba(0, 0, 0, 1)" }} transition="box-shadow 0.3s ease-in-out" borderRadius="10px">
-              <Box>
-                <Image src={product.image} alt={product.name} w="100%" h="250px" objectFit="cover" borderRadius={"10px"} />
-                <Box p={4}>
-                  <Text mt={2} fontWeight="bold" fontSize="xl">{product.name}</Text>
-                  <Text fontSize="lg">Price: ${product.price}</Text>
-                  <Box display="flex" justifyContent="space-between" mt={4} gap={2} borderTop="2px solid black">
-                    <Button as={RouterLink} to={`/products/${product.id}`} mt={2} bg="#FFB344" _hover={{ boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)", }}>
-                      Details
-                    </Button>
-                    <Button as={RouterLink} to={`/`} mt={2} bg="#FFB344" _hover={{ boxShadow: "4px 4px 0px 0px rgba(0, 0, 0, 1)", }}>
-                      Add to cart
-                    </Button>
-                  </Box>
-                </Box>
-              </Box>
-            </GridItem>
-          ))}
-        </Grid>
+      <Flex justifyContent={"space-between"}>
+        <Stack spacing={3}>
+          <Select placeholder='Filter' size='lg'>
+            <option value='option1'>Option 1</option>
+            <option value='option2'>Option 2</option>
+            <option value='option3'>Option 3</option>
+          </Select>
+        </Stack>
+        <InputGroup w={"400px"} ml={3}>
+          <InputLeftElement pointerEvents="none" height="100%">
+            <Icon as={FaSearch} color="gray.400" />
+          </InputLeftElement>
+          <Input placeholder='Search' size='lg' pl="40px" outline="none" focusBorderColor="transparent" border="1px solid gray" _hover={{ border: "1px solid gray" }} _focus={{   outline: "none",   boxShadow: "none",   border: "1px solid gray", }}
+          />
+        </InputGroup>
       </Flex>
 
-      {/* Pagination controls */}
-      <Flex display={"flex"} justifyContent={"center"} alignItems={"center"} mt={4}>
-        <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
+      {/* Products Table */}
+      <TableContainer bg={"white"} mt={"10px"}>
+        <Table border={"2px solid black"} variant="simple">
+          <Thead h={"60px"}>
+            <Tr border={"2px solid black"}>
+              <Th>No</Th>
+              <Th>
+                <Box display="flex" alignItems="center">
+                  Products <FaArrowDown style={{ marginLeft: '4px' }} />
+                </Box>
+              </Th>
+              <Th>
+                <Box display="flex" alignItems="center">
+                  Name <FaArrowDown style={{ marginLeft: '4px' }} />
+                </Box>
+              </Th>
+              <Th>
+                <Box display="flex" alignItems="center">
+                  Category <FaArrowDown style={{ marginLeft: '4px' }} />
+                </Box>
+              </Th>
+              <Th>
+                <Box display="flex" alignItems="center">
+                  Price <FaArrowDown style={{ marginLeft: '4px' }} />
+                </Box>
+              </Th>
+              <Th textAlign="center">
+                Action
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {data.map((product, index) => (
+              <Tr key={product.id} border={"2px solid black"}>
+                <Td>{rowIndex(index)}</Td>
+                <Td>
+                  <Image boxSize="50px" src={product.image || "path_to_placeholder_image.jpg"} alt={product.name} />
+                </Td>
+                <Td>{product.name}</Td>
+                <Td>{product.category.name}</Td>
+                <Td>${product.price}</Td>
+                <Td display="flex" justifyContent="center" gap={"20px"}>
+                  <ButtonCard text="Update" bgColor="#FF9E00" as={RouterLink} to={`/products/${product.id}`} color="white" />
+                  <ButtonCard text="Detail" bgColor="#FE90E7" as={RouterLink} to={`/products/${product.id}`} color="white" />
+                  <ButtonCard text="Delete" bgColor="red.500" color="white"/> 
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+
+      {/* Pagination */}
+      <Flex justifyContent="space-between" mt={4}>
+        <Button isDisabled={page === 1} onClick={() => setPage(page - 1)}>
           Previous
         </Button>
-        <Text mx={4}>Page {page} of {totalPages}</Text>
-        <Button onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))} disabled={page === totalPages}>
+        <Text>Page {page} of {totalPages}</Text>
+        <Button isDisabled={page === totalPages} onClick={() => setPage(page + 1)}>
           Next
         </Button>
       </Flex>

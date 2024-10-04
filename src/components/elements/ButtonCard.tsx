@@ -6,15 +6,17 @@ type ButtonCardProps = {
     to?: string
     w?: string
     text: string
+    color?: string
     bgColor?: string
 }
 
-const ButtonCard = ({ as, to, w, text, bgColor }: ButtonCardProps) => {
+const ButtonCard = ({ as, to, w, text, bgColor, color }: ButtonCardProps) => {
     return (
         <Button
             as={as}
             to={to}
             mt={2}
+            color={color}
             bgColor={bgColor}
             borderRadius={"unset"}
             boxShadow="4px 4px 0px rgba(0, 0, 0, 1)"

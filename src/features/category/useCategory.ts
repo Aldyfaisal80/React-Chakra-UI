@@ -30,7 +30,8 @@ export const useCategory = (limit: number, page: number) => {
                     ...prev,
                     isLoading: false,
                     error: error instanceof Error ? error.message : "An error occurred",
-                    totalPages: 1,  error
+                    totalPages: 1,  
+                    error
                 }));
             }
         };

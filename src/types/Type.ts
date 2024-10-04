@@ -19,7 +19,7 @@ export type Categories = {
 }
 
 export type State = {
-    data: Products[];
+    data: Products |Products[] ;
     isLoading: boolean;
     error: string | null;
     totalPages?: number;
