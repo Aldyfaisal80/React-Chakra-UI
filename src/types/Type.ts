@@ -1,34 +1,29 @@
-export type Products = {
+export type Product = {
     id?: string;
     name: string;
-    price: number;
-    image: string;
-    isLoading: boolean;
-    error: string | null;
-    totalPages: number;
-    category_id: string;
     description: string;
-    categories: Category[]
-    category: Category;
-    data: Products[]
+    category_id: string;
+    image: string;
+    price: number;
 }
 
 export type ProductState = {
     data: {
-        products: Products[];
+        products: Product[];
         total: number;
         totalPages: number;
         page: number;
     } | null;
-    loading: boolean;
+    pending: boolean;
     error: Error | null;
     message: string;
     status: string;
+    mutate: (data: Product) => Promise<void>;
 }
 
 export type CreateProductResponse = {
-    createProduct: (data: Products) => Promise<void>;
-    data: Products | null
+    createProduct: (data: Product) => Promise<void>;
+    data: Product | null
     loading: boolean
     error: Error | null
     message: string
@@ -39,15 +34,7 @@ export type Category = {
     id?: string,
     name: string,
     description: string
-    data: Products[]
-}
-
-export type State = {
-    data: Products |Products[] ;
-    isLoading: boolean;
-    error: string | null;
-    totalPages?: number;
-    
+    data: Product[]
 }
 
 export type CreateCategoryResponse = {
