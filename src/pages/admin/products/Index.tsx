@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Checkbox, Stack, Select, Input, Icon, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Select, Input, Icon, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import { useProducts } from "../../../features/product";
@@ -7,11 +7,11 @@ import { FaArrowDown, FaSearch } from "react-icons/fa";
 
 export default function Products() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error, totalPages } = useProducts(10, page);
+  const { data, loading, error } = useProducts(10, page);
 
   const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
         <Spinner size="xl" />
@@ -22,26 +22,41 @@ export default function Products() {
   if (error) {
     return (
       <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
-        <Alert status="error">{error}</Alert>
+        <Alert status="error">{error.message}</Alert>
       </Flex>
     );
   }
 
+  const products = data?.data?.products || [];
+  const totalPagesCount = data?.totalPages || 1;
+
   return (
     <>
-      <Flex justifyContent={"space-between"}>
-        <Stack spacing={3}>
+      <Flex justifyContent={"space-between"} mb={4}>
+        <Stack spacing={3} w="40%">
           <Select placeholder='Filter' size='lg'>
             <option value='option1'>Option 1</option>
             <option value='option2'>Option 2</option>
             <option value='option3'>Option 3</option>
           </Select>
         </Stack>
-        <InputGroup w={"400px"} ml={3}>
-          <InputLeftElement pointerEvents="none" height="100%">
+        <InputGroup w={"400px"}>
+          <InputLeftElement pointerEvents="none">
             <Icon as={FaSearch} color="gray.400" />
           </InputLeftElement>
-          <Input placeholder='Search' size='lg' pl="40px" outline="none" focusBorderColor="transparent" border="1px solid gray" _hover={{ border: "1px solid gray" }} _focus={{   outline: "none",   boxShadow: "none",   border: "1px solid gray", }}
+          <Input
+            placeholder='Search'
+            size='lg'
+            pl="40px"
+            outline="none"
+            focusBorderColor="transparent"
+            border="1px solid gray"
+            _hover={{ border: "1px solid gray" }}
+            _focus={{
+              outline: "none",
+              boxShadow: "none",
+              border: "1px solid gray",
+            }}
           />
         </InputGroup>
       </Flex>
@@ -72,28 +87,32 @@ export default function Products() {
                   Price <FaArrowDown style={{ marginLeft: '4px' }} />
                 </Box>
               </Th>
-              <Th textAlign="center">
-                Action
-              </Th>
+              <Th textAlign="center">Action</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((product, index) => (
-              <Tr key={product.id} border={"2px solid black"}>
-                <Td>{rowIndex(index)}</Td>
-                <Td>
-                  <Image boxSize="50px" src={product.image || "path_to_placeholder_image.jpg"} alt={product.name} />
-                </Td>
-                <Td>{product.name}</Td>
-                <Td>{product.category.name}</Td>
-                <Td>${product.price}</Td>
-                <Td display="flex" justifyContent="center" gap={"20px"}>
-                  <ButtonCard text="Update" bgColor="#FF9E00" as={RouterLink} to={`/products/${product.id}`} color="white" />
-                  <ButtonCard text="Detail" bgColor="#FE90E7" as={RouterLink} to={`/products/${product.id}`} color="white" />
-                  <ButtonCard text="Delete" bgColor="red.500" color="white"/> 
-                </Td>
+            {products.length > 0 ? (
+              products.map((product, index) => (
+                <Tr key={product.id} border={"2px solid black"}>
+                  <Td>{rowIndex(index)}</Td>
+                  <Td>
+                    <Image boxSize="50px" src={product.image || "path_to_placeholder_image.jpg"} alt={product.name} />
+                  </Td>
+                  <Td>{product.name}</Td>
+                  <Td>{product.category.name}</Td>
+                  <Td>${product.price}</Td>
+                  <Td display="flex" justifyContent="center" gap={"20px"}>
+                    <ButtonCard text="Update" bgColor="#FF9E00" as={RouterLink} to={`/products/${product.id}`} color="white" />
+                    <ButtonCard text="Detail" bgColor="#FE90E7" as={RouterLink} to={`/products/${product.id}`} color="white" />
+                    <ButtonCard text="Delete" bgColor="red.500" color="white" />
+                  </Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={6} textAlign="center">No products available.</Td>
               </Tr>
-            ))}
+            )}
           </Tbody>
         </Table>
       </TableContainer>
@@ -103,8 +122,8 @@ export default function Products() {
         <Button isDisabled={page === 1} onClick={() => setPage(page - 1)}>
           Previous
         </Button>
-        <Text>Page {page} of {totalPages}</Text>
-        <Button isDisabled={page === totalPages} onClick={() => setPage(page + 1)}>
+        <Text>Page {page} of {totalPagesCount}</Text>
+        <Button isDisabled={page === totalPagesCount} onClick={() => setPage(page + 1)}>
           Next
         </Button>
       </Flex>
