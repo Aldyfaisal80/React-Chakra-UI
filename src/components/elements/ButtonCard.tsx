@@ -8,9 +8,11 @@ type ButtonCardProps = {
     text: string
     color?: string
     bgColor?: string
+    type?: "button" | "submit" | "reset"
+    onClick?: () => void
 }
 
-const ButtonCard = ({ as, to, w, text, bgColor, color }: ButtonCardProps) => {
+const ButtonCard = ({ as, to, w, text, bgColor, color, type }: ButtonCardProps) => {
     return (
         <Button
             as={as}
@@ -24,8 +26,11 @@ const ButtonCard = ({ as, to, w, text, bgColor, color }: ButtonCardProps) => {
                 transform: 'translate(5px, 5px)',
                 boxShadow: '0px 0px 0px black',
             }}
-            w={w}>
+            w={w}
+            type={type}
+            >
             {text}
+            
         </Button>
     )
 }

@@ -1,17 +1,18 @@
 import { Box, Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Select, Input, Icon, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
-import { useProducts } from "../../../features/product";
+import { useDeleteProduct, useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
 import { FaArrowDown, FaSearch } from "react-icons/fa";
 
 export default function Products() {
   const [page, setPage] = useState(1);
-  const { data, loading, error } = useProducts(10, page);
+  const { data, isLoading, error } = useProducts(10, page);
+  const { mutate } = useDeleteProduct();
 
-  const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
+  const rowIndex = (index) => (page - 1) * 10 + (index + 1);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
         <Spinner size="xl" />
@@ -30,6 +31,17 @@ export default function Products() {
   const products = data?.data?.products || [];
   const totalPagesCount = data?.totalPages || 1;
 
+const handleDelete = async (product) => {
+    console.log("Deleting product:", product); // Log the product to be deleted
+    const { error } = await mutate(product);
+    if (error) {
+        console.error("Deletion failed:", error);
+    } else {
+        setPage(1);
+        console.log("Product deleted successfully!"); // Log success
+    }
+};
+
   return (
     <>
       <Flex justifyContent={"space-between"} mb={4}>
@@ -47,21 +59,13 @@ export default function Products() {
           <Input
             placeholder='Search'
             size='lg'
-            pl="40px"
-            outline="none"
-            focusBorderColor="transparent"
-            border="1px solid gray"
-            _hover={{ border: "1px solid gray" }}
-            _focus={{
-              outline: "none",
-              boxShadow: "none",
-              border: "1px solid gray",
-            }}
+            borderColor="gray.300"
+            _hover={{ borderColor: "gray.400" }}
+            _focus={{ borderColor: "gray.600", boxShadow: "none" }}
           />
         </InputGroup>
       </Flex>
 
-      {/* Products Table */}
       <TableContainer bg={"white"} mt={"10px"}>
         <Table border={"2px solid black"} variant="simple">
           <Thead h={"60px"}>
@@ -69,22 +73,22 @@ export default function Products() {
               <Th>No</Th>
               <Th>
                 <Box display="flex" alignItems="center">
-                  Products <FaArrowDown style={{ marginLeft: '4px' }} />
+                  Products <FaArrowDown />
                 </Box>
               </Th>
               <Th>
                 <Box display="flex" alignItems="center">
-                  Name <FaArrowDown style={{ marginLeft: '4px' }} />
+                  Name <FaArrowDown />
                 </Box>
               </Th>
               <Th>
                 <Box display="flex" alignItems="center">
-                  Category <FaArrowDown style={{ marginLeft: '4px' }} />
+                  Category <FaArrowDown />
                 </Box>
               </Th>
               <Th>
                 <Box display="flex" alignItems="center">
-                  Price <FaArrowDown style={{ marginLeft: '4px' }} />
+                  Price <FaArrowDown />
                 </Box>
               </Th>
               <Th textAlign="center">Action</Th>
@@ -100,11 +104,11 @@ export default function Products() {
                   </Td>
                   <Td>{product.name}</Td>
                   <Td>{product.category.name}</Td>
-                  <Td>${product.price}</Td>
+                  <Td>${product.price.toFixed(2)}</Td>
                   <Td display="flex" justifyContent="center" gap={"20px"}>
                     <ButtonCard text="Update" bgColor="#FF9E00" as={RouterLink} to={`/products/${product.id}`} color="white" />
                     <ButtonCard text="Detail" bgColor="#FE90E7" as={RouterLink} to={`/products/${product.id}`} color="white" />
-                    <ButtonCard text="Delete" bgColor="red.500" color="white" />
+                    <ButtonCard text="Delete" bgColor="red.500" onClick={() => handleDelete(product)} color="white" />
                   </Td>
                 </Tr>
               ))
@@ -117,7 +121,6 @@ export default function Products() {
         </Table>
       </TableContainer>
 
-      {/* Pagination */}
       <Flex justifyContent="space-between" mt={4}>
         <Button isDisabled={page === 1} onClick={() => setPage(page - 1)}>
           Previous
