@@ -58,8 +58,8 @@ export default function Section3() {
                                     </CardBody>
 
                                     <CardFooter display="flex" justifyContent="space-between" mt={4} gap={2} borderTop="2px solid black">
-                                        <ButtonCard as={RouterLink} to={`/products/${product.id}`} text="Details" />
-                                        <ButtonCard as={RouterLink} to={`/`} text="Add to Cart" />
+                                        <ButtonCard as={RouterLink} bgColor="#FF9900" to={`/products/${product.id}`} text="Details" />
+                                        <ButtonCard as={RouterLink} bgColor="#FF9900" to={`/`} text="Add to Cart" />
                                     </CardFooter>
                                 </Card>
                             </GridItem>
