@@ -1,7 +1,22 @@
 import { Flex, FormControl, Input, Select, Text } from "@chakra-ui/react";
 import ButtonCard from "../../../../components/elements/ButtonCard";
+import { useCategories } from "../../../../features/category";
+import { Category } from "../../../../types/Type";
 
 export default function CreateProduct() {
+  
+  
+  const { data } = useCategories(50, 1)
+
+  const renderCategories = () => {
+    if (data) {
+      return data.data.categories.map((category: Category) => {
+        return (
+          <option key={category.id} value={category.id}>{category.name}</option>
+        )
+      })
+    }
+  }
   return (
     <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} bg={"#F8F7F3"}>
       <FormControl
@@ -29,10 +44,10 @@ export default function CreateProduct() {
           placeholder='Category'
           h={"50px"}
           fontSize={"lg"}
-          border={"2px solid black"}>
-          <option value='option1'>Option 1</option>
-          <option value='option2'>Option 2</option>
-          <option value='option3'>Option 3</option>
+          border={"2px solid black"}
+
+        >
+          {renderCategories()}
         </Select>
         <Input
           placeholder="Description"
@@ -57,7 +72,7 @@ export default function CreateProduct() {
         />
         <ButtonCard
           text="Create"
-          bgColor={"#FE90E7"} 
+          bgColor={"#FE90E7"}
         />
       </FormControl>
     </Flex>
