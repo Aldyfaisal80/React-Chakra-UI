@@ -9,6 +9,7 @@ export type Products = {
     category_id: string;
     description: string;
     categories: Categories[]
+    category: Categories;
 }
 export type Categories = {
     id?: string,
