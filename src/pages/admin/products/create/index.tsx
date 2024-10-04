@@ -1,163 +1,166 @@
-import { Box, Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Select, Input, Icon, InputGroup, InputLeftElement, useToast } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import { useState } from "react";
-import { useDeleteProduct, useProducts } from "../../../../features/product";
+import { Flex, FormControl, Input, Select, Text, useToast } from "@chakra-ui/react";
 import ButtonCard from "../../../../components/elements/ButtonCard";
-import { FaArrowDown, FaSearch } from "react-icons/fa";
-import { Product } from "../../../../types/Type";
+import { useCategories } from "../../../../features/category";
+import { Category } from "../../../../types/Type";
+import { useCreateProduct } from "../../../../features/product";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
 
-export default function Products() {
-  const [page, setPage] = useState(1);
-  const { data, loading, error } = useProducts(10, page);
-  const { mutate } = useDeleteProduct();
-  const toast = useToast(); // Initialize useToast for notifications
-  const [products, setProducts] = useState<Product[]>(data?.data?.products || []);
+// Zod schema for validation
+const ProductSchema = z.object({
+  name: z.string()
+    .min(5, "Minimal 5 characters")
+    .max(50, "Maximal 50 characters"),
+  price: z.number()
+    .min(1000, "Minimal 1000")
+    .max(10000000, "Maximal 10000000"),
+  description: z.string()
+    .min(5, "Minimal 5 characters")
+    .max(100, "Maximal 100 characters"),
+  category_id: z.string().nonempty("Category is required"),
+  image: z.string().url("Invalid image URL")
+});
 
-  const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
+type ProductSchemaType = z.infer<typeof ProductSchema>;
 
-  if (loading) {
-    return (
-      <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
-        <Spinner size="xl" />
-      </Flex>
-    );
-  }
+export default function CreateProduct() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProductSchemaType>({
+    resolver: zodResolver(ProductSchema),
+    defaultValues: {
+      name: "",
+      price: 0,
+      description: "",
+      category_id: "",
+      image: "",
+    }
+  });
 
-  if (error) {
-    return (
-      <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
-        <Alert status="error">{error.message}</Alert>
-      </Flex>
-    );
-  }
+  const { data } = useCategories(50, 1);
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { mutate, isLoading } = useCreateProduct();
 
-  const handleDelete = async (product: Product) => {
-    if (window.confirm(`Are you sure you want to delete the product: ${product.name}?`)) {
-      try {
-        await mutate(product); // Send the full product object to mutate
-        setProducts(prev => prev.filter(p => p.id !== product.id)); // Remove the deleted product from the state
-
-        // Show success toast
+  const onSubmit = (values: ProductSchemaType) => {
+    mutate(values)
+      .then(() => {
         toast({
-          title: "Product deleted",
-          description: `${product.name} has been successfully deleted.`,
+          title: "Success",
+          description: "Product created successfully",
           status: "success",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
+          position: "top",
         });
-      } catch (err) {
-        // Show error toast
+        navigate("dashboard/productsAdmin");
+      })
+      .catch((err) => {
         toast({
-          title: "Delete failed",
-          description: err.message || "An error occurred while deleting the product.",
+          title: "Error",
+          description: err.message || "An error occurred while creating the product",
           status: "error",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
+          position: "top",
         });
-      }
+      });
+  };
+
+  const renderCategories = () => {
+    if (data) {
+      return data.data.categories.map((category: Category) => (
+        <option key={category.id} value={category.id}>
+          {category.name}
+        </option>
+      ));
     }
   };
 
-  const totalPagesCount = data?.totalPages || 1;
-
   return (
-    <>
-      <Flex justifyContent={"space-between"} mb={4}>
-        <Stack spacing={3} w="40%">
-          <Select placeholder='Filter' size='lg'>
-            <option value='option1'>Option 1</option>
-            <option value='option2'>Option 2</option>
-            <option value='option3'>Option 3</option>
-          </Select>
-        </Stack>
-        <InputGroup w={"400px"}>
-          <InputLeftElement pointerEvents="none">
-            <Icon as={FaSearch} color="gray.400" />
-          </InputLeftElement>
+    <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} bg={"#F8F7F3"}>
+      <form onSubmit={handleSubmit(onSubmit)}> {/* Form tag wrapped around the form control */}
+        <FormControl
+          display="flex"
+          flexDirection="column"
+          gap={6}
+          w={"600px"}
+          borderTop={"2px solid black"}
+          borderLeft={"2px solid black"}
+          p={"50px"}
+          borderRadius={"10px"}
+          boxShadow={"8px 8px 0px 0px rgba(0, 0, 0, 1)"}
+        >
+          <Text fontSize={"1.5rem"} fontWeight={"bold"}>
+            Create Product
+          </Text>
+
+          {/* Product Name */}
           <Input
-            placeholder='Search'
-            size='lg'
-            pl="40px"
-            outline="none"
-            focusBorderColor="transparent"
-            border="1px solid gray"
-            _hover={{ border: "1px solid gray" }}
-            _focus={{
-              outline: "none",
-              boxShadow: "none",
-              border: "1px solid gray",
-            }}
+            placeholder="Name"
+            {...register("name")}
+            h={"50px"}
+            fontSize={"lg"}
+            border={"2px solid black"}
           />
-        </InputGroup>
-      </Flex>
+          {errors.name && <Text color="red.500">{errors.name.message}</Text>}
 
-      {/* Products Table */}
-      <TableContainer bg={"white"} mt={"10px"}>
-        <Table border={"2px solid black"} variant="simple">
-          <Thead h={"60px"}>
-            <Tr border={"2px solid black"}>
-              <Th>No</Th>
-              <Th>
-                <Box display="flex" alignItems="center">
-                  Products <FaArrowDown style={{ marginLeft: '4px' }} />
-                </Box>
-              </Th>
-              <Th>
-                <Box display="flex" alignItems="center">
-                  Name <FaArrowDown style={{ marginLeft: '4px' }} />
-                </Box>
-              </Th>
-              <Th>
-                <Box display="flex" alignItems="center">
-                  Category <FaArrowDown style={{ marginLeft: '4px' }} />
-                </Box>
-              </Th>
-              <Th>
-                <Box display="flex" alignItems="center">
-                  Price <FaArrowDown style={{ marginLeft: '4px' }} />
-                </Box>
-              </Th>
-              <Th textAlign="center">Action</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {products.length > 0 ? (
-              products.map((product, index) => (
-                <Tr key={product.id} border={"2px solid black"}>
-                  <Td>{rowIndex(index)}</Td>
-                  <Td>
-                    <Image boxSize="50px" src={product.image || "path_to_placeholder_image.jpg"} alt={product.name} />
-                  </Td>
-                  <Td>{product.name}</Td>
-                  <Td>{product.category.name}</Td>
-                  <Td>${product.price}</Td>
-                  <Td display="flex" justifyContent="center" gap={"20px"}>
-                    <ButtonCard text="Update" bgColor="#FF9E00" as={RouterLink} to={`/products/${product.id}`} color="white" />
-                    <ButtonCard text="Detail" bgColor="#FE90E7" as={RouterLink} to={`/products/${product.id}`} color="white" />
-                    {/* Pass full product object here */}
-                    <ButtonCard text="Delete" bgColor="red.500" onClick={() => handleDelete(product)} color="white" />
-                  </Td>
-                </Tr>
-              ))
-            ) : (
-              <Tr>
-                <Td colSpan={6} textAlign="center">No products available.</Td>
-              </Tr>
-            )}
-          </Tbody>
-        </Table>
-      </TableContainer>
+          {/* Category */}
+          <Select
+            placeholder='Category'
+            {...register("category_id")}
+            h={"50px"}
+            fontSize={"lg"}
+            border={"2px solid black"}
+          >
+            {renderCategories()}
+          </Select>
+          {errors.category_id && <Text color="red.500">{errors.category_id.message}</Text>}
 
-      {/* Pagination */}
-      <Flex justifyContent="space-between" mt={4}>
-        <Button isDisabled={page === 1} onClick={() => setPage(page - 1)}>
-          Previous
-        </Button>
-        <Text>Page {page} of {totalPagesCount}</Text>
-        <Button isDisabled={page === totalPagesCount} onClick={() => setPage(page + 1)}>
-          Next
-        </Button>
-      </Flex>
-    </>
+          {/* Description */}
+          <Input
+            placeholder="Description"
+            {...register("description")}
+            h={"50px"}
+            fontSize={"lg"}
+            border={"2px solid black"}
+          />
+          {errors.description && <Text color="red.500">{errors.description.message}</Text>}
+
+          {/* Price */}
+          <Input
+            placeholder="Price"
+            type="number"
+            {...register("price", { valueAsNumber: true })}
+            h={"50px"}
+            fontSize={"lg"}
+            border={"2px solid black"}
+          />
+          {errors.price && <Text color="red.500">{errors.price.message}</Text>}
+
+          {/* Image URL */}
+          <Input
+            placeholder="Image URL"
+            type="url"
+            {...register("image")}
+            h={"50px"}
+            fontSize={"lg"}
+            border={"2px solid black"}
+          />
+          {errors.image && <Text color="red.500">{errors.image.message}</Text>}
+
+          {/* Button Card */}
+          <ButtonCard
+            text={isLoading ? "Creating..." : "Create"}
+            bgColor={"#FE90E7"}
+            type="submit"
+          />
+        </FormControl>
+      </form>
+    </Flex>
   );
 }
