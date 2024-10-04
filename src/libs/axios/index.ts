@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const axiosIntance = axios.create({
+const axiosInstance = axios.create({
     baseURL: 'http://localhost:2334/api/v1',
     params:{
         key: 'aldypanteq'
@@ -10,4 +10,4 @@ const axiosIntance = axios.create({
     }
 })
 
-export default axiosIntance
+export default axiosInstance

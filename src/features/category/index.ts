@@ -1,5 +1,5 @@
 export * from "./useCreateCategory"
 export * from "./useDeleteCategory"
-export * from "./useCategory"
+export * from "./useCategories"
 export * from "./useUpdateCategory"
 export * from "./useCategoryId"

@@ -7,6 +7,8 @@ import Dashboard from "./pages/admin/dashboard/Index";
 import AuthLayouts from "./components/layouts/AuthLayouts";
 import Login from "./pages/auth/login/Index";
 import Register from "./pages/auth/register/Index";
+import CreateProduct from "./pages/admin/products/create/index";
+import CreateCategory from "./pages/admin/category/create/index";
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +32,14 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/productsAdmin',
                 element: <AdminProducts />
+            },
+            {
+                path: '/dashboard/create-product',
+                element: <CreateProduct />
+            },
+            {
+                path: '/dashboard/create-category',
+                element: <CreateCategory />
             }
         ]
     },

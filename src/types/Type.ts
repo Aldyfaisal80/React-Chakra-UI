@@ -8,14 +8,38 @@ export type Products = {
     totalPages: number;
     category_id: string;
     description: string;
-    categories: Categories[]
-    category: Categories;
+    categories: Category[]
+    category: Category;
+    data: Products[]
 }
-export type Categories = {
+
+export type ProductState = {
+    data: {
+        products: Products[];
+        total: number;
+        totalPages: number;
+        page: number;
+    } | null;
+    loading: boolean;
+    error: Error | null;
+    message: string;
+    status: string;
+}
+
+export type CreateProductResponse = {
+    createProduct: (data: Products) => Promise<void>;
+    data: Products | null
+    loading: boolean
+    error: Error | null
+    message: string
+    status: string
+}
+
+export type Category = {
     id?: string,
     name: string,
     description: string
-    products: Products[]
+    data: Products[]
 }
 
 export type State = {
@@ -26,9 +50,11 @@ export type State = {
     
 }
 
-export type StateCategory = {
-    data: Categories[];
-    isLoading: boolean;
-    error: string | null;
-    totalPages?: number;
+export type CreateCategoryResponse = {
+    createCategory: (data: Category) => Promise<void>;
+    data: Category | null
+    loading: boolean
+    error: Error | null
+    message: string
+    status: string
 }

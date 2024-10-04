@@ -1,9 +1,23 @@
-import { useEffect, useState } from "react"
-import { ProductState } from "../../types/Type"
+import { useEffect, useState } from "react";
+import { Category } from "../../types/Type";
 import axiosInstance from "../../libs/axios";
 
-export const useProducts = (limit: number, page: number): ProductState => {
-    const [state, setState] = useState<ProductState>({
+
+interface CategoryState {
+    data: {
+        categories: Category[];
+        total: number;
+        totalPages: number;
+        page: number;
+    } | null;
+    loading: boolean;
+    error: Error | null;
+    message: string;
+    status: string;
+}
+
+export const useCategories = (limit: number, page: number): CategoryState => {
+    const [state, setState] = useState<CategoryState>({
         data: null,
         loading: false,
         error: null,
@@ -12,10 +26,10 @@ export const useProducts = (limit: number, page: number): ProductState => {
     });
 
     useEffect(() => {
-        const fetchProduct = async () => {
+        const fetchCategory = async () => {
             setState(prev => ({ ...prev, loading: true }));
             try {
-                const response = await axiosInstance.get(`/products`, {
+                const response = await axiosInstance.get(`/categories`, {
                     params: { limit, page }
                 });
                 const totalPages = Math.ceil(response.data.data.total / limit);
@@ -35,7 +49,7 @@ export const useProducts = (limit: number, page: number): ProductState => {
             }
         };
 
-        fetchProduct();
+        fetchCategory();
     }, [limit, page]);
 
     return state;

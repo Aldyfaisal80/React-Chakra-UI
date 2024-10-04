@@ -6,11 +6,12 @@ import ButtonCard from "../../../components/elements/ButtonCard";
 
 export default function Section3() {
     const [page, setPage] = useState(1);
-    const { data, isLoading, error, totalPages } = useProducts(12, page);
+    const { data, loading, error } = useProducts(12, page);
+    
+    const products = data?.data?.products || [];
+    const totalPages = data?.totalPages || 1;
 
-    console.log(data);
-
-    if (isLoading) {
+    if (loading) {
         return (
             <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
                 <Spinner size="xl" />
@@ -21,7 +22,7 @@ export default function Section3() {
     if (error) {
         return (
             <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
-                <Alert status="error">{error}</Alert>
+                <Alert status="error">{error.message}</Alert>
             </Flex>
         );
     }
@@ -37,34 +38,31 @@ export default function Section3() {
 
             <Flex w="100%" h="max-content" justifyContent="center" alignItems="center" mt={"50px"}>
                 <Grid templateColumns="repeat(4, 1fr)" w="80%" h="fit-content" gap={6} justifyContent="center" mx="auto">
-                    {data.map((product) => {
-                        return (
-                            <GridItem key={product.id} w="100%" h="auto" border="2px solid black" _hover={{ boxShadow: "8px 8px 0px 0px rgba(0, 0, 0, 1)" }} transition="box-shadow 0.3s ease-in-out" borderRadius="unset"
-                            >
-                                <Card>
-                                    <CardBody padding={0}>
-                                        <Image src={product.image} alt={product.name} w="100%" h="250px" objectFit="cover" borderRadius="unset" />
-                                        <Box p={4}>
-                                            <Text mt={2} fontWeight="bold" w={"250px"} fontSize="lg">
-                                                {product.name}
-                                            </Text>
-                                            <Text fontSize="md" as={RouterLink} to={`/categories/${product.category.id}`}>
-                                                Category: {product.category.name}
-                                            </Text>
-                                            <Text fontSize="md">
-                                                Price: ${product.price}
-                                            </Text>
-                                        </Box>
-                                    </CardBody>
+                    {products.map((product) => (
+                        <GridItem key={product.id} w="100%" h="auto" border="2px solid black" _hover={{ boxShadow: "8px 8px 0px 0px rgba(0, 0, 0, 1)" }} transition="box-shadow 0.3s ease-in-out">
+                            <Card>
+                                <CardBody padding={0}>
+                                    <Image src={product.image} alt={product.name} w="100%" h="250px" objectFit="cover" />
+                                    <Box p={4}>
+                                        <Text mt={2} fontWeight="bold" w={"250px"} fontSize="lg">
+                                            {product.name}
+                                        </Text>
+                                        <Text fontSize="md" as={RouterLink} to={`/categories/${product.category.id}`}>
+                                            Category: {product.category.name}
+                                        </Text>
+                                        <Text fontSize="md">
+                                            Price: ${product.price}
+                                        </Text>
+                                    </Box>
+                                </CardBody>
 
-                                    <CardFooter display="flex" justifyContent="space-between" mt={4} gap={2} borderTop="2px solid black">
-                                        <ButtonCard as={RouterLink} bgColor="#FF9900" to={`/products/${product.id}`} text="Details" />
-                                        <ButtonCard as={RouterLink} bgColor="#FF9900" to={`/`} text="Add to Cart" />
-                                    </CardFooter>
-                                </Card>
-                            </GridItem>
-                        );
-                    })}
+                                <CardFooter display="flex" justifyContent="space-between" mt={4} gap={2} borderTop="2px solid black">
+                                    <ButtonCard as={RouterLink} bgColor="#FF9900" to={`/products/${product.id}`} text="Details" />
+                                    <ButtonCard as={RouterLink} bgColor="#FF9900" to={`/`} text="Add to Cart" />
+                                </CardFooter>
+                            </Card>
+                        </GridItem>
+                    ))}
                 </Grid>
             </Flex>
 
