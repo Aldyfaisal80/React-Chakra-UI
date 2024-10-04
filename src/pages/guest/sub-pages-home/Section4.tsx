@@ -16,7 +16,7 @@ export default function Section4() {
                     <ButtonCard text="Sell Now" w="180px" />
                 </Flex>
             </Box>
-            <Flex w="100%" h="auto" px="100px" py={"50px"} alignItems={"flex-end"} bg="gray.50">
+            <Flex w="100%" h="auto" px="100px" py={"50px"} alignItems={"flex-end"}>
                 <Box w="50%" h="auto" mx="auto">
                     <Text fontSize="2xl" mb="4" fontWeight="bold">
                         Subscribe to get the latest updates on our products and offers

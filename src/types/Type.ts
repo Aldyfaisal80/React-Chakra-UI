@@ -10,7 +10,6 @@ export type Products = {
     description: string;
     categories: Category[]
     category: Category;
-    data: Products[]
 }
 
 export type ProductState = {
