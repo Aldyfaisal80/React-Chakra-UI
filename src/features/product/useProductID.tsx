@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import axiosIntance from "../../libs/axios"
-import { type CreateProductResponse } from "../../types/Type"
+import { ProductResponse } from "../../types/Type"
 
 export const useProductID = (id: string) => {
-    const [state, setState] = useState<Omit<CreateProductResponse, "createProduct">>({
+    const [state, setState] = useState<Omit<ProductResponse, "mutate">>({
         data: null,
-        loading: false,
+        pending: false,
         error: null,
         message: "",
         status: "",
@@ -19,7 +19,7 @@ export const useProductID = (id: string) => {
                 });
                 setState({
                     data: response.data.data,
-                    loading: false,
+                    pending: false,
                     error: null,
                     message: response.data.message,
                     status: response.data.status

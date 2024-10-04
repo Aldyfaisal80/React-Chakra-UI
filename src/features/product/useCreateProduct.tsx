@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { Product, ProductState } from "../../types/Type"
+import { Product, ProductResponse } from "../../types/Type"
 import axiosInstance from "../../libs/axios"
 
 export const useCreateProduct = () => {
-    const [state, setState] = useState<Omit<ProductState,"mutate">>({
+    const [state, setState] = useState<Omit<ProductResponse,"mutate">>({
       data: null,
       pending: false,
       error: null,
@@ -22,12 +22,8 @@ export const useCreateProduct = () => {
           message: response.data.message,
           status: response.data.status
         })
-      } catch (err) {
-        setState(prev => ({
-          ...prev,
-          pending: false,
-          error: err instanceof Error ? err : new Error('An error occurred while creating product'),
-        }))
+      } catch (error) {
+        setState(prev => ({ ...prev, loading: false, error: error instanceof Error ? error : new Error("An unknown error occurred") }))
       }
     }
     return { ...state, mutate }

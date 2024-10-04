@@ -1,19 +1,32 @@
-import { useEffect, useState } from "react"
-import { ProductState } from "../../types/Type"
+import { useEffect, useState } from "react"; 
+import { Product } from "../../types/Type";
 import axiosInstance from "../../libs/axios";
+
+interface ProductState {
+    data: {
+        products: Product[] | null; 
+        total: number; 
+        totalPages: number; 
+        page: number; 
+    } | null; 
+    isLoading: boolean; 
+    error: Error | null; 
+    message: string; 
+    status: string; 
+}
 
 export const useProducts = (limit: number, page: number): ProductState => {
     const [state, setState] = useState<ProductState>({
-        data: null,
-        loading: false,
-        error: null,
-        message: '',
-        status: ''
+        data: null, 
+        isLoading: false, 
+        error: null, 
+        message: '', 
+        status: '' 
     });
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            setState(prev => ({ ...prev, loading: true }));
+        const fetchProducts = async () => {
+            setState(prev => ({ ...prev, isLoading: true }));
             try {
                 const response = await axiosInstance.get(`/products`, {
                     params: { limit, page }
@@ -21,7 +34,7 @@ export const useProducts = (limit: number, page: number): ProductState => {
                 const totalPages = Math.ceil(response.data.data.total / limit);
                 setState({
                     data: { ...response.data, totalPages },
-                    loading: false,
+                    isLoading: false,
                     error: null,
                     message: response.data.message,
                     status: response.data.status
@@ -29,14 +42,14 @@ export const useProducts = (limit: number, page: number): ProductState => {
             } catch (err) {
                 setState(prev => ({
                     ...prev,
-                    loading: false,
-                    error: err instanceof Error ? err : new Error('An error occurred while fetching categories'),
+                    isLoading: false,
+                    error: err instanceof Error ? err : new Error('An error occurred while fetching products'),
                 }));
             }
         };
 
-        fetchProduct();
+        fetchProducts();
     }, [limit, page]);
 
     return state;
-}
+};

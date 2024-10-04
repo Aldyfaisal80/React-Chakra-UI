@@ -5,29 +5,16 @@ export type Product = {
     category_id: string;
     image: string;
     price: number;
+    category: Category
 }
 
-export type ProductState = {
-    data: {
-        products: Product[];
-        total: number;
-        totalPages: number;
-        page: number;
-    } | null;
+export type ProductResponse = {
+    mutate: (data: Product) => Promise<void>;
+    data: Product | null;
     pending: boolean;
     error: Error | null;
     message: string;
     status: string;
-    mutate: (data: Product) => Promise<void>;
-}
-
-export type CreateProductResponse = {
-    createProduct: (data: Product) => Promise<void>;
-    data: Product | null
-    loading: boolean
-    error: Error | null
-    message: string
-    status: string
 }
 
 export type Category = {
