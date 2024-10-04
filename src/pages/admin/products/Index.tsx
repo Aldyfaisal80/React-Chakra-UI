@@ -1,16 +1,15 @@
 import { Box, Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Select, Input, Icon, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
-import { useDeleteProduct, useProducts } from "../../../features/product";
+import { useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
 import { FaArrowDown, FaSearch } from "react-icons/fa";
 
 export default function Products() {
   const [page, setPage] = useState(1);
   const { data, isLoading, error } = useProducts(10, page);
-  const { mutate } = useDeleteProduct();
 
-  const rowIndex = (index) => (page - 1) * 10 + (index + 1);
+  const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
 
   if (isLoading) {
     return (
@@ -31,16 +30,6 @@ export default function Products() {
   const products = data?.data?.products || [];
   const totalPagesCount = data?.totalPages || 1;
 
-const handleDelete = async (product) => {
-    console.log("Deleting product:", product); // Log the product to be deleted
-    const { error } = await mutate(product);
-    if (error) {
-        console.error("Deletion failed:", error);
-    } else {
-        setPage(1);
-        console.log("Product deleted successfully!"); // Log success
-    }
-};
 
   return (
     <>
@@ -108,7 +97,7 @@ const handleDelete = async (product) => {
                   <Td display="flex" justifyContent="center" gap={"20px"}>
                     <ButtonCard text="Update" bgColor="#FF9E00" as={RouterLink} to={`/products/${product.id}`} color="white" />
                     <ButtonCard text="Detail" bgColor="#FE90E7" as={RouterLink} to={`/products/${product.id}`} color="white" />
-                    <ButtonCard text="Delete" bgColor="red.500" onClick={() => handleDelete(product)} color="white" />
+                    <ButtonCard text="Delete" bgColor="red.500" as={RouterLink} to={``} color="white" />
                   </Td>
                 </Tr>
               ))

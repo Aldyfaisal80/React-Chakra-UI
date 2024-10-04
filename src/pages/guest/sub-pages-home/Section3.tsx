@@ -8,7 +8,8 @@ export default function Section3() {
     const [page, setPage] = useState(1);
     const { data, isLoading, error } = useProducts(12, page);
     
-    const products = data?.products || [];
+    const products = data?.data?.products || [];
+    console.log(products);
     const totalPages = data?.totalPages || 1;
 
     if (isLoading) {

@@ -5,7 +5,7 @@ export type Product = {
     category_id: string;
     image: string;
     price: number;
-    category: Category
+    category: Category     
 }
 
 export type ProductResponse = {

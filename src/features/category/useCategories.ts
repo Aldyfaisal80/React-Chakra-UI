@@ -9,6 +9,9 @@ interface CategoryState {
         total: number;
         totalPages: number;
         page: number;
+        data: {
+            categories: Category[];
+        }
     } | null;
     loading: boolean;
     error: Error | null;
