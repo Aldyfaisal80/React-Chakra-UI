@@ -6,12 +6,12 @@ import ButtonCard from "../../../components/elements/ButtonCard";
 
 export default function Section3() {
     const [page, setPage] = useState(1);
-    const { data, loading, error } = useProducts(12, page);
+    const { data, isLoading, error } = useProducts(12, page);
     
-    const products = data?.data?.products || [];
+    const products = data?.products || [];
     const totalPages = data?.totalPages || 1;
 
-    if (loading) {
+    if (isLoading) {
         return (
             <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
                 <Spinner size="xl" />
