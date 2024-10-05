@@ -9,6 +9,7 @@ import Login from "./pages/auth/login/Index";
 import Register from "./pages/auth/register/Index";
 import CreateProduct from "./pages/admin/products/create/index";
 import CreateCategory from "./pages/admin/category/create/index";
+import Category from "./pages/admin/category";
 
 export const router = createBrowserRouter([
     {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/products',
                 element: <AdminProducts />
+            },
+            {
+                path: '/dashboard/category',
+                element: <Category />
             },
             {
                 path: '/dashboard/create-product',

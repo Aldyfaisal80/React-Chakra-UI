@@ -8,6 +8,9 @@ interface ProductState {
         total: number; 
         totalPages: number; 
         page: number; 
+        data:{
+            products: Product[] | null;
+        }
     } | null; 
     isLoading: boolean; 
     error: Error | null; 

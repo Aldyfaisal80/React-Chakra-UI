@@ -1,14 +1,13 @@
 import { Flex, FormControl, Input, Select, Text, useToast } from "@chakra-ui/react";
 import ButtonCard from "../../../../components/elements/ButtonCard";
 import { useCategories } from "../../../../features/category";
-import { Category } from "../../../../types/Type";
+import { Category, Product } from "../../../../types/Type";
 import { useCreateProduct } from "../../../../features/product";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 
-// Zod schema for validation
 const ProductSchema = z.object({
   name: z.string()
     .min(5, "Minimal 5 characters")
@@ -34,7 +33,7 @@ export default function CreateProduct() {
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       name: "",
-      price: 0,
+      price: "" as unknown as number,
       description: "",
       category_id: "",
       image: "",
@@ -44,10 +43,27 @@ export default function CreateProduct() {
   const { data } = useCategories(50, 1);
   const navigate = useNavigate();
   const toast = useToast();
-  const { mutate, isLoading } = useCreateProduct();
+  const { mutate, pending } = useCreateProduct();
 
   const onSubmit = (values: ProductSchemaType) => {
-    mutate(values)
+    const category = data?.data.categories.find((category) => category.id === values.category_id);
+    if (!category) {
+      toast({
+        title: "Error",
+        description: "Category not found",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+  
+    const product: Product = {
+      ...values,
+      category,
+    }
+    mutate(product)
       .then(() => {
         toast({
           title: "Success",
@@ -57,7 +73,7 @@ export default function CreateProduct() {
           isClosable: true,
           position: "top",
         });
-        navigate("dashboard/productsAdmin");
+        navigate("/dashboard/products");
       })
       .catch((err) => {
         toast({
@@ -83,7 +99,7 @@ export default function CreateProduct() {
 
   return (
     <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} h={"100vh"} bg={"#F8F7F3"}>
-      <form onSubmit={handleSubmit(onSubmit)}> {/* Form tag wrapped around the form control */}
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl
           display="flex"
           flexDirection="column"
@@ -98,8 +114,6 @@ export default function CreateProduct() {
           <Text fontSize={"1.5rem"} fontWeight={"bold"}>
             Create Product
           </Text>
-
-          {/* Product Name */}
           <Input
             placeholder="Name"
             {...register("name")}
@@ -108,8 +122,6 @@ export default function CreateProduct() {
             border={"2px solid black"}
           />
           {errors.name && <Text color="red.500">{errors.name.message}</Text>}
-
-          {/* Category */}
           <Select
             placeholder='Category'
             {...register("category_id")}
@@ -120,8 +132,6 @@ export default function CreateProduct() {
             {renderCategories()}
           </Select>
           {errors.category_id && <Text color="red.500">{errors.category_id.message}</Text>}
-
-          {/* Description */}
           <Input
             placeholder="Description"
             {...register("description")}
@@ -130,8 +140,6 @@ export default function CreateProduct() {
             border={"2px solid black"}
           />
           {errors.description && <Text color="red.500">{errors.description.message}</Text>}
-
-          {/* Price */}
           <Input
             placeholder="Price"
             type="number"
@@ -141,8 +149,6 @@ export default function CreateProduct() {
             border={"2px solid black"}
           />
           {errors.price && <Text color="red.500">{errors.price.message}</Text>}
-
-          {/* Image URL */}
           <Input
             placeholder="Image URL"
             type="url"
@@ -152,10 +158,8 @@ export default function CreateProduct() {
             border={"2px solid black"}
           />
           {errors.image && <Text color="red.500">{errors.image.message}</Text>}
-
-          {/* Button Card */}
           <ButtonCard
-            text={isLoading ? "Creating..." : "Create"}
+            text={pending ? "Creating..." : "Create"}
             bgColor={"#FE90E7"}
             type="submit"
           />
