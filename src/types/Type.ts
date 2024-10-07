@@ -6,7 +6,11 @@ export type Product = {
     image: string;
     price: number;
     category: Category    
-    
+    totalPages: number;
+    data : {
+        Product: Product[];
+        products: Product[];
+    }
 }
 
 export type ProductResponse = {
@@ -23,6 +27,7 @@ export type Category = {
     name: string,
     description: string
     data: Product[]
+    products: Product[]
 }
 
 export type CreateCategoryResponse = {

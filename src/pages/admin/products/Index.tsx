@@ -7,7 +7,7 @@ import { FaSearch } from "react-icons/fa";
 
 export default function Products() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useProducts(10, page);
+  const { data, loading, error } = useProducts(10, page);
   const { mutate } = useDeleteProduct();
 
   const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
@@ -17,7 +17,7 @@ export default function Products() {
     minimumFractionDigits: 2,
   });
 
-  if (isLoading) {
+  if (loading) {
     return (
       <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
         <Spinner size="xl" />
@@ -42,12 +42,12 @@ export default function Products() {
     <>
       <Flex justifyContent={"space-between"} mb={4} alignItems="center">
         <Stack spacing={3} direction="row">
-          <Button variant="outline" colorScheme="gray" size="md">All Filters</Button>
-          <Button variant="outline" colorScheme="gray" size="md">All Products</Button>
-          <Button variant="outline" colorScheme="gray" size="md">All Categories</Button>
-          <Button variant="outline" colorScheme="gray" size="md">A-Z</Button>
+        <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Filters</Button>
+          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Products</Button>
+          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Categories</Button>
+          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>A-Z</Button>
         </Stack>
-        <InputGroup w={"400px"}>
+        <InputGroup w={"400px"} bg={"white"}>
           <InputLeftElement pointerEvents="none">
             <Icon as={FaSearch} color="gray.400" />
           </InputLeftElement>
@@ -62,8 +62,8 @@ export default function Products() {
         </InputGroup>
       </Flex>
 
-      <TableContainer bg={"white"} mt={"10px"} borderRadius="lg" boxShadow="md">
-        <Table variant="simple">
+      <TableContainer bg={"white"} mt={"10px"} boxShadow="md" borderRadius={"unset"} >
+        <Table variant= "simple" border={"2px solid black"}>
           <Thead bg="gray.50">
             <Tr>
               <Th>NO</Th>
@@ -76,7 +76,7 @@ export default function Products() {
           <Tbody>
             {products.length > 0 ? (
               products.map((product, index) => (
-                <Tr key={product.id} bg={index % 2 === 0 ? "gray.50" : "white"}>
+                <Tr key={product.id} bg={index % 2 === 0 ? "yellow.50" : "white"} border={"2px solid black"}>
                   <Td>{rowIndex(index)}</Td>
                   <Td>
                     <Flex alignItems="center">
@@ -87,9 +87,9 @@ export default function Products() {
                   <Td><Tag colorScheme="teal" borderRadius="full">{product.category.name}</Tag></Td>
                   <Td>{currencyFormatter.format(product.price)}</Td>
                   <Td display="flex" justifyContent="center" gap={"10px"}>
-                    <ButtonCard text="Update" bgColor="purple.600" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/products/${product.id}`}
+                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/products/${product.id}`}
                     />
-                    <ButtonCard text="Detail" bgColor="blue.500" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/products/${product.id}`}
+                    <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/products/${product.id}`}
                     />
                     <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => mutate(product.id)}
                     />
