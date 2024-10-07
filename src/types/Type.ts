@@ -10,9 +10,9 @@ export type Product = {
 }
 
 export type ProductResponse = {
-    mutate: (data: Product ) => Promise<void>;
+    mutate: (data: Product) => Promise<void>;
     data: Product | null;
-    pending: boolean;
+    loading: boolean;
     error: Error | null;
     message: string;
     status: string;
