@@ -87,7 +87,7 @@ export default function Products() {
                   <Td><Tag colorScheme="teal" borderRadius="full">{product.category.name}</Tag></Td>
                   <Td>{currencyFormatter.format(product.price)}</Td>
                   <Td display="flex" justifyContent="center" gap={"10px"}>
-                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/products/${product.id}`}
+                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/dashboard/update-product/${product.id}`} 
                     />
                     <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/products/${product.id}`}
                     />

@@ -43,7 +43,7 @@ export default function CreateProduct() {
   const { data } = useCategories(50, 1);
   const navigate = useNavigate();
   const toast = useToast();
-  const { mutate, pending } = useCreateProduct();
+  const { mutate, loading } = useCreateProduct();
 
   const onSubmit = (values: ProductSchemaType) => {
     const category = data?.data.categories.find((category) => category.id === values.category_id);
@@ -159,7 +159,7 @@ export default function CreateProduct() {
           />
           {errors.image && <Text color="red.500">{errors.image.message}</Text>}
           <ButtonCard
-            text={pending ? "Creating..." : "Create"}
+            text={loading ? "Creating..." : "Create"}
             bgColor={"#FE90E7"}
             type="submit"
           />
