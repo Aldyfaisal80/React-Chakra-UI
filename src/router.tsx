@@ -10,6 +10,7 @@ import Register from "./pages/auth/register/Index";
 import CreateProduct from "./pages/admin/products/create/index";
 import CreateCategory from "./pages/admin/category/create/index";
 import Category from "./pages/admin/category";
+import UpdateProduct from "./pages/admin/products/update";
 
 export const router = createBrowserRouter([
     {
@@ -31,19 +32,23 @@ export const router = createBrowserRouter([
                 element: <Dashboard />
             },
             {
-                path: '/dashboard/products',
+                path: 'products',
                 element: <AdminProducts />
             },
             {
-                path: '/dashboard/category',
+                path: 'category',
                 element: <Category />
             },
             {
-                path: '/dashboard/create-product',
+                path: 'create-product',
                 element: <CreateProduct />
             },
             {
-                path: '/dashboard/create-category',
+                path: 'update-product/:id',
+                element: <UpdateProduct />
+            },
+            {
+                path: 'create-category',
                 element: <CreateCategory />
             }
         ]

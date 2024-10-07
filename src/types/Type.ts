@@ -6,8 +6,8 @@ export type Product = {
     image: string;
     price: number;
     category: Category    
-    totalPages: number;
-    data : {
+    totalPages?: number;
+    data? : {
         Product: Product[];
         products: Product[];
     }
