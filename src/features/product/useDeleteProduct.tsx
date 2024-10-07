@@ -12,7 +12,7 @@ export const useDeleteProduct = (): ProductResponse => {
     status: ''
   });
 
-  const mutate = async (data: Product) => {
+  const mutate = async (id: string) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -20,26 +20,27 @@ export const useDeleteProduct = (): ProductResponse => {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, delete it!',
     });
-
+  
     if (result.isConfirmed) {
       setState(prev => ({ ...prev, pending: true }));
       try {
-        const response = await axiosInstance.delete(`/products/${data.id}`);
+        const response = await axiosInstance.delete(`/products/${id}`);
         setState({
           data: response.data.data,
           pending: false,
           error: null,
           message: response.data.message,
-          status: response.data.status
+          status: response.data.status,
         });
-
+  
         await Swal.fire({
           title: 'Deleted!',
           text: 'Your product has been deleted.',
           icon: 'success',
         });
+        window.location.reload();
       } catch (err) {
         setState(prev => ({
           ...prev,
@@ -55,6 +56,7 @@ export const useDeleteProduct = (): ProductResponse => {
       }
     }
   };
+  
 
   return {
     ...state,

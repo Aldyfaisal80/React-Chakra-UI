@@ -5,11 +5,12 @@ export type Product = {
     category_id: string;
     image: string;
     price: number;
-    category: Category     
+    category: Category    
+    
 }
 
 export type ProductResponse = {
-    mutate: (data: Product) => Promise<void>;
+    mutate: (data: Product ) => Promise<void>;
     data: Product | null;
     pending: boolean;
     error: Error | null;
