@@ -1,14 +1,14 @@
-import { Box, Button, Flex, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Select, Input, Icon, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { Button, Flex, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Input, Icon, InputGroup, InputLeftElement, Tag } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import ButtonCard from "../../../components/elements/ButtonCard";
-import { FaArrowDown, FaSearch } from "react-icons/fa";
-import { useCategories } from "../../../features/category";
+import { FaSearch } from "react-icons/fa";
+import { useCategories, useDeleteCategory } from "../../../features/category";
 
 export default function Category() {
   const [page, setPage] = useState(1);
   const {data,error,loading,message,status} = useCategories(10, page);
-
+  // const {} = useDeleteCategory();
 
   const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
 
@@ -42,63 +42,60 @@ export default function Category() {
 
   return (
     <>
-      <Flex justifyContent={"space-between"} mb={4}>
-        <Stack spacing={3} w="40%">
-          <Select placeholder='Filter' size='lg'>
-            <option value='option1'>Option 1</option>
-            <option value='option2'>Option 2</option>
-            <option value='option3'>Option 3</option>
-          </Select>
+      <Flex justifyContent={"space-between"} mb={4} alignItems="center">
+        <Stack spacing={3} direction="row">
+          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Filters</Button>
+          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Products</Button>
+          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Categories</Button>
+          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>A-Z</Button>
         </Stack>
-        <InputGroup w={"400px"}>
-          <InputLeftElement pointerEvents="none">
+        <InputGroup w={"400px"} bg={"white"}>
+          <InputLeftElement pointerEvents="none"  color="gray.400" borderRadius={"md"}>
             <Icon as={FaSearch} color="gray.400" />
           </InputLeftElement>
           <Input
             placeholder='Search'
-            size='lg'
+            size='md'
+            borderRadius="md"
             borderColor="gray.300"
             _hover={{ borderColor: "gray.400" }}
-            _focus={{ borderColor: "gray.600", boxShadow: "none" }}
+            _focus={{ borderColor: "gray.600", boxShadow: "lg" }}
           />
         </InputGroup>
       </Flex>
 
-      <TableContainer bg={"white"} mt={"10px"}>
-        <Table border={"2px solid black"} variant="simple">
-          <Thead h={"60px"}>
-            <Tr border={"2px solid black"}>
-              <Th>No</Th>
-              <Th>
-                <Box display="flex" alignItems="center">
-                  Category <FaArrowDown />
-                </Box>
-              </Th>
-              <Th>
-                <Box display="flex" alignItems="center">
-                  Description <FaArrowDown />
-                </Box>
-              </Th>
+      <TableContainer bg={"white"} mt={"10px"} borderRadius="unset" boxShadow="md">
+        <Table variant="simple" border="2px solid black">
+          <Thead bg="gray.50">
+            <Tr>
+              <Th>NO</Th>
+              <Th>Category</Th>
+              <Th>Description</Th>
+              <Th>Total Products</Th>
               <Th textAlign="center">Action</Th>
             </Tr>
           </Thead>
           <Tbody>
             {category.length > 0 ? (
               category.map((category, index) => (
-                <Tr key={category.id} border={"2px solid black"}>
+                <Tr key={category.id} bg={index % 2 === 0 ? "yellow.50" : "white"} border={"2px solid black"}>
                   <Td>{rowIndex(index)}</Td>
-                  <Td>{category.name}</Td>
+                  <Td fontWeight={"semibold"}>{category.name}</Td>
                   <Td>{category.description}</Td>
-                  <Td display="flex" justifyContent="center" gap={"20px"}>
-                    <ButtonCard text="Update" bgColor="#FF9E00" as={RouterLink} to={`/category/${category.id}`} color="white" />
-                    <ButtonCard text="Detail" bgColor="#FE90E7" as={RouterLink} to={`/category/${category.id}`} color="white" />
-                    <ButtonCard text="Delete" bgColor="red.500" as={RouterLink} to={``} color="white" />
+                  <Td>{category.products.length}</Td>
+                  <Td display="flex" justifyContent="center" gap={"10px"}>
+                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/category/${category.id}`}
+                    />
+                    <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/category/${category.id}`}
+                    />
+                    <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => mutate(category.id)}
+                    />
                   </Td>
                 </Tr>
               ))
             ) : (
               <Tr>
-                <Td colSpan={6} textAlign="center">{message}</Td>
+                <Td colSpan={8} textAlign="center" fontWeight="bold">No products available.</Td>
               </Tr>
             )}
           </Tbody>
