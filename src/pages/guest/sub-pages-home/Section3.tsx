@@ -1,18 +1,21 @@
-import { Box, Button, Flex, Grid, GridItem, Image, Text, Spinner, Alert, Heading, Card, CardBody, CardFooter } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, GridItem, Image, Text, Spinner, Alert, Heading, Card, CardBody, CardFooter, ButtonGroup } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import { useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
+import { useCategories } from './../../../features/category/useCategories';
 
 export default function Section3() {
     const [page, setPage] = useState(1);
-    const { data, isLoading, error } = useProducts(12, page);
-    
+    const { data, loading, error } = useProducts(12, page);
+    const { data: categories } = useCategories(50, 1);
+    console.log(categories?.data?.categories);
+
     const products = data?.data?.products || [];
     console.log(products);
     const totalPages = data?.totalPages || 1;
 
-    if (isLoading) {
+    if (loading) {
         return (
             <Flex w={"100%"} h={"100vh"} justifyContent={"center"} alignItems={"center"}>
                 <Spinner size="xl" />
@@ -36,6 +39,35 @@ export default function Section3() {
                     Explore our curated collection and find your perfect products, from cutting-edge technology to stylish accessories. Enhance your lifestyle and productivity with the perfect choice for every need.
                 </Text>
             </Flex>
+
+            <Box w="min-w-full"
+                h="max-content"
+                mt="20px"
+                display="flex"
+                gap="20px"
+                overflowX="auto"
+                scrollBehavior="smooth"
+                p="20px"
+                mx={"50px"}
+                borderX={"2px"}
+                css={{
+                    '&::-webkit-scrollbar': {
+                        display: 'none',
+                    },
+                    '&': {
+                        msOverflowStyle: 'none',
+                        scrollbarWidth: 'none',
+                    }
+                }}
+            >
+                {categories?.data?.categories.map((category) => (
+                    <ButtonGroup size="lg" key={category.id} gap="20px" display="flex">
+                    <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"} px={"25px"} py={"20px"}>
+                      <Text>{category.name}</Text>
+                    </Button>
+                  </ButtonGroup>
+                ))}
+            </Box>
 
             <Flex w="100%" h="max-content" justifyContent="center" alignItems="center" mt={"50px"}>
                 <Grid templateColumns="repeat(4, 1fr)" w="80%" h="fit-content" gap={6} justifyContent="center" mx="auto">
