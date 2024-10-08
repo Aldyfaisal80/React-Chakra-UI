@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useDeleteProduct, useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
 import { FaSearch } from "react-icons/fa";
+import Swal from 'sweetalert2';  
+import { Product } from "../../../types/Type";
 
 export default function Products() {
   const [page, setPage] = useState(1);
@@ -37,6 +39,27 @@ export default function Products() {
 
   const products = data?.data?.products || [];
   const totalPagesCount = data?.totalPages || 1;
+
+  const handleDelete = (id: Product) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutate(id); 
+        Swal.fire(
+          'Deleted!',
+          'The product has been deleted.',
+          'success'
+        );
+      }
+    });
+  };
 
   return (
     <>
@@ -91,7 +114,7 @@ export default function Products() {
                     />
                     <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/products/${product.id}`}
                     />
-                    <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => mutate(product.id)}
+                    <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => handleDelete(product.id)}
                     />
                   </Td>
                 </Tr>

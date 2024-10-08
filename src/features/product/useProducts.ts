@@ -14,28 +14,23 @@ export const useProducts = (limit: number, page: number) => {
     useEffect(() => {
         setState(prev => ({ ...prev, loading: true }));
 
-        axiosInstance
-            .get(`/products`, {
-                params: { limit, page },
+        axiosInstance.get(`/products`, { params: { limit, page }, }).then(response => {
+            const totalPages = Math.ceil(response.data.data.total / limit);
+            setState({
+                data: { ...response.data, totalPages },
+                loading: false,
+                error: null,
+                message: response.data.message,
+                status: response.data.status,
             })
-            .then(response => {
-                const totalPages = Math.ceil(response.data.data.total / limit);
-                setState({
-                    data: { ...response.data, totalPages },
-                    loading: false,
-                    error: null,
-                    message: response.data.message,
-                    status: response.data.status,
-                });
-            })
-            .catch(err => {
-                setState(prev => ({
-                    ...prev,
-                    loading: false,
-                    error: err instanceof Error ? err : new Error('An error occurred while fetching products'),
-                }));
-            });
-    }, [limit, page]);
+        }).catch(error => {
+            setState(prev => ({
+                ...prev,
+                loading: false,
+                error: error instanceof Error ? error : new Error('An error occurred while fetching products'),
+            }));
+        });
+    }, [limit, page])
 
     return state;
 };
