@@ -30,8 +30,8 @@ export type Category = {
     products: Product[]
 }
 
-export type CreateCategoryResponse = {
-    createCategory: (data: Category) => Promise<void>;
+export type CategoryResponse = {
+    mutate: (data: Category) => Promise<void>;
     data: Category | null
     loading: boolean
     error: Error | null

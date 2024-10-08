@@ -1,26 +1,9 @@
 import { useEffect, useState } from "react";
-import { Category } from "../../types/Type";
+import { CategoryResponse } from "../../types/Type";
 import axiosInstance from "../../libs/axios";
 
-
-interface CategoryState {
-    data: {
-        categories: Category[];
-        total: number;
-        totalPages: number;
-        page: number;
-        data: {
-            categories: Category[];
-        }
-    } | null;
-    loading: boolean;
-    error: Error | null;
-    message: string;
-    status: string;
-}
-
-export const useCategories = (limit: number, page: number): CategoryState => {
-    const [state, setState] = useState<CategoryState>({
+export const useCategories = (limit: number, page: number) => {
+    const [state, setState] = useState<Omit<CategoryResponse, 'mutate'>>({
         data: null,
         loading: false,
         error: null,
@@ -29,30 +12,23 @@ export const useCategories = (limit: number, page: number): CategoryState => {
     });
 
     useEffect(() => {
-        const fetchCategory = async () => {
-            setState(prev => ({ ...prev, loading: true }));
-            try {
-                const response = await axiosInstance.get(`/categories`, {
-                    params: { limit, page }
-                });
-                const totalPages = Math.ceil(response.data.data.total / limit);
-                setState({
-                    data: { ...response.data, totalPages },
-                    loading: false,
-                    error: null,
-                    message: response.data.message,
-                    status: response.data.status
-                });
-            } catch (err) {
-                setState(prev => ({
-                    ...prev,
-                    loading: false,
-                    error: err instanceof Error ? err : new Error('An error occurred while fetching categories'),
-                }));
-            }
-        };
-
-        fetchCategory();
+        setState(prev => ({ ...prev, loading: true }));
+        axiosInstance.get(`/categories`, { params: { limit, page } }).then(response => {
+            const totalPages = Math.ceil(response.data.data.total / limit);
+            setState({
+                data: { ...response.data, totalPages },
+                loading: false,
+                error: null,
+                message: response.data.message,
+                status: response.data.status
+            })
+        }).catch(error => {
+            setState(prev => ({
+                ...prev,
+                loading: false,
+                error: error instanceof Error ? error : new Error('An error occurred while fetching categories'),
+            }));
+        })
     }, [limit, page]);
 
     return state;

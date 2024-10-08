@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../../libs/axios"; 
+import axiosInstance from "../../libs/axios";
 import { ProductResponse } from "../../types/Type";
 
 export const useProductID = (id: string) => {
@@ -14,16 +14,15 @@ export const useProductID = (id: string) => {
     useEffect(() => {
         setState(prev => ({ ...prev, loading: true }))
 
-        axiosInstance.get(`/products`, { params: { id } })
-            .then(response => {
-                setState({
-                    data: response.data.data,
-                    loading: false,
-                    error: null,
-                    message: response.data.message,
-                    status: response.data.status,
-                })
+        axiosInstance.get(`/products/${id}`).then(response => {
+            setState({
+                data: response.data.data,
+                loading: false,
+                error: null,
+                message: response.data.message,
+                status: response.data.status,
             })
+        })
             .catch(error => {
                 setState(prev => ({
                     ...prev,
