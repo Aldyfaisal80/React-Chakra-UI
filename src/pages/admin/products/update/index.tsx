@@ -2,13 +2,13 @@ import { Flex, FormControl, Input, Select, Text, useToast } from "@chakra-ui/rea
 import ButtonCard from "../../../../components/elements/ButtonCard";
 import { useCategories } from "../../../../features/category";
 import { Category, Product } from "../../../../types/Type";
-import { useUpdateProduct } from "../../../../features/product";
+import { useProductID, useUpdateProduct } from "../../../../features/product";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from "react";
-import axiosInstance from "../../../../libs/axios";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 const ProductSchema = z.object({
   name: z.string()
@@ -27,11 +27,10 @@ const ProductSchema = z.object({
 type ProductSchemaType = z.infer<typeof ProductSchema>;
 
 export default function UpdateProduct() {
-  const { id } = useParams<{ id: string }>();
   const {
     register,
     handleSubmit,
-    setValue,
+    reset,
     formState: { errors },
   } = useForm<ProductSchemaType>({
     resolver: zodResolver(ProductSchema),
@@ -43,86 +42,82 @@ export default function UpdateProduct() {
       image: "",
     },
   });
-
-  const [loadingData, setLoadingData] = useState<boolean>(true);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); 
+  
+  const { id } = useParams();
   const { data } = useCategories(50, 1);
   const navigate = useNavigate();
   const toast = useToast();
   const { mutate, loading } = useUpdateProduct();
+  const { data: productIDData, loading: loadingID } = useProductID(id as string);
 
-  useEffect(() => {
-    axiosInstance.get(`/products/${id}`)
-      .then((response) => {
-        const product = response.data.data;
-        setValue("name", product.name);
-        setValue("price", product.price);
-        setValue("description", product.description);
-        setValue("category_id", product.category_id);
-        setValue("image", product.image);
-        setSelectedCategory(product.category_id); 
-        setLoadingData(false);
-      })
-      .catch(() => {
-        toast({
-          title: "Error",
-          description: "Failed to fetch product data",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-        setLoadingData(false);
-      });
-  }, [id, setValue, toast]);
+useEffect(() => {
+  if (!loadingID && productIDData) {
+    reset({
+      name: productIDData.name,
+      price: productIDData.price,
+      description: productIDData.description,
+      category_id: productIDData.category_id,
+      image: productIDData.image,
+    });
+  }
+}, [loadingID, productIDData, reset]);
 
   const onSubmit = (values: ProductSchemaType) => {
-    const category = data?.data.categories.find((category) => category.id === values.category_id);
-    if (!category) {
-      toast({
-        title: "Error",
-        description: "Category not found",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
-      return;
-    }
-
-    const product: Product = {
-      ...values,
-      id: id, 
-      category,
-    }
-
-    mutate(product)
-      .then(() => {
-        toast({
-          title: "Success",
-          description: "Product updated successfully",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-        navigate("/dashboard/products");
-      })
-      .catch((err) => {
-        toast({
-          title: "Error",
-          description: err.message || "An error occurred while updating the product",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
-      });
+    const category = data?.data.categories.find((category: Category) => category.id === values.category_id);
+  
+    Swal.fire({
+      title: 'Are you sure you want to update the product?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const product: Product = {
+          ...values,
+          id: id,
+          category,
+        };
+  
+        mutate(product)
+          .then(() => {
+            Swal.fire(
+              'Updated!',
+              'The product has been updated.',
+              'success'
+            ).then(() => {
+              navigate('/dashboard/products');
+  
+              toast({
+                title: "Success",
+                description: "Product updated successfully",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+                position: "top",
+              });
+            });
+          })
+          .catch((err) => {
+            toast({
+              title: "Error",
+              description: err.message || "An error occurred while updating the product",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+              position: "top",
+            });
+          });
+      }
+    });
   };
+  
 
   const renderCategories = () => {
     if (data) {
-      return data.data.categories.map((category: Category) => (
+      return data?.data.categories.map((category: Category) => (
         <option key={category.id} value={category.id}>
           {category.name}
         </option>
@@ -130,7 +125,7 @@ export default function UpdateProduct() {
     }
   };
 
-  if (loadingData) {
+  if (loading) {
     return <Text>Loading...</Text>;
   }
 
@@ -160,7 +155,6 @@ export default function UpdateProduct() {
           />
           {errors.name && <Text color="red.500">{errors.name.message}</Text>}
           <Select
-            placeholder={selectedCategory ? selectedCategory : "Category"}
             {...register("category_id")}
             h={"50px"}
             fontSize={"lg"}

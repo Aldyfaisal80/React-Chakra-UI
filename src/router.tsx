@@ -11,6 +11,7 @@ import CreateProduct from "./pages/admin/products/create/index";
 import CreateCategory from "./pages/admin/category/create/index";
 import Category from "./pages/admin/category";
 import UpdateProduct from "./pages/admin/products/update";
+import DetailsProducts from "./pages/admin/products/detail/Index";
 
 export const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
             {
                 path: 'create-product',
                 element: <CreateProduct />
+            },
+            {
+                path: 'detail-product/:id',
+                element: <DetailsProducts />
             },
             {
                 path: 'update-product/:id',
