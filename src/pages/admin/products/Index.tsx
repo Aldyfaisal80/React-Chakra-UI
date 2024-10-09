@@ -70,17 +70,16 @@ export default function Products() {
           <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Categories</Button>
           <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>A-Z</Button>
         </Stack>
-        <InputGroup w={"400px"} bg={"white"}>
+        <InputGroup w={"400px"} bg={"white"} borderRadius={"unset"}>
           <InputLeftElement pointerEvents="none">
             <Icon as={FaSearch} color="gray.400" />
           </InputLeftElement>
           <Input
             placeholder='Search'
             size='md'
-            borderRadius="md"
-            borderColor="gray.300"
-            _hover={{ borderColor: "gray.400" }}
-            _focus={{ borderColor: "gray.600", boxShadow: "lg" }}
+            border={"2px solid black"}
+            borderRadius={"unset"}
+            _focus={{ outline: "none" }}
           />
         </InputGroup>
       </Flex>
@@ -107,7 +106,7 @@ export default function Products() {
                       <Text fontWeight="medium">{product.name}</Text>
                     </Flex>
                   </Td>
-                  <Td><Tag colorScheme="teal" borderRadius="full">{product.category.name}</Tag></Td>
+                  <Td fontWeight={"semibold"}>{product.category.name}</Td>
                   <Td>{currencyFormatter.format(product.price)}</Td>
                   <Td display="flex" justifyContent="center" gap={"10px"}>
                     <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/dashboard/update-product/${product.id}`} 
