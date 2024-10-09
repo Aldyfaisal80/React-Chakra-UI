@@ -1,5 +1,5 @@
 import { Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Input, Icon, InputGroup, InputLeftElement, Tag } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useDeleteProduct, useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
@@ -8,9 +8,10 @@ import Swal from 'sweetalert2';
 import { Product } from "../../../types/Type";
 
 export default function Products() {
+  const {id} = useParams()
   const [page, setPage] = useState(1);
   const { data, loading, error } = useProducts(10, page);
-  const { mutate } = useDeleteProduct();
+  const { mutate } = useDeleteProduct(id);
 
   const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
   const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -82,16 +83,17 @@ export default function Products() {
           <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Categories</Button>
           <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>A-Z</Button>
         </Stack>
-        <InputGroup w={"400px"} bg={"white"} borderRadius={"unset"}>
+        <InputGroup w={"400px"} bg={"white"}>
           <InputLeftElement pointerEvents="none">
             <Icon as={FaSearch} color="gray.400" />
           </InputLeftElement>
           <Input
             placeholder='Search'
             size='md'
-            border={"2px solid black"}
-            borderRadius={"unset"}
-            _focus={{ outline: "none" }}
+            borderRadius="md"
+            borderColor="gray.300"
+            _hover={{ borderColor: "gray.400" }}
+            _focus={{ borderColor: "gray.600", boxShadow: "lg" }}
           />
         </InputGroup>
       </Flex>
@@ -118,7 +120,7 @@ export default function Products() {
                       <Text fontWeight="medium">{product.name}</Text>
                     </Flex>
                   </Td>
-                  <Td fontWeight={"semibold"}>{product.category.name}</Td>
+                  <Td><Tag colorScheme="teal" borderRadius="full">{product.category?.name}</Tag></Td>
                   <Td>{currencyFormatter.format(product.price)}</Td>
                   <Td display="flex" justifyContent="center" gap={"10px"}>
                     <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/dashboard/update-product/${product.id}`} 
