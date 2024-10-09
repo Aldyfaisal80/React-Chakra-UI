@@ -51,15 +51,27 @@ export default function Products() {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        mutate(id); 
-        Swal.fire(
-          'Deleted!',
-          'The product has been deleted.',
-          'success'
-        );
+        mutate(id)
+          .then(() => {
+            Swal.fire(
+              'Deleted!',
+              'The product has been deleted.',
+              'success'
+            ).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error: Error) => {
+            Swal.fire(
+              'Error!',
+              `An error occurred while deleting the product: ${error.message}`,
+              'error'
+            );
+          });
       }
     });
   };
+  
 
   return (
     <>
