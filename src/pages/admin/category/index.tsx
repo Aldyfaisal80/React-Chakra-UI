@@ -84,10 +84,10 @@ export default function Category() {
                   <Td>{category.description}</Td>
                   <Td>{category.products.length}</Td>
                   <Td display="flex" justifyContent="center" gap={"10px"}>
-                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/category/${category.id}`}
+                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/dashboard/update-category/${category.id}`}
                     />
-                    <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/category/${category.id}`}
-                    />
+                    {/* <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/dashboard/detail-category/${category.id}`}
+                    /> */}
                     <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => mutate(category.id)}
                     />
                   </Td>
