@@ -83,17 +83,16 @@ export default function Products() {
           <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Categories</Button>
           <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>A-Z</Button>
         </Stack>
-        <InputGroup w={"400px"} bg={"white"}>
+        <InputGroup w={"400px"} bg={"white"} borderRadius={"unset"}>
           <InputLeftElement pointerEvents="none">
             <Icon as={FaSearch} color="gray.400" />
           </InputLeftElement>
           <Input
             placeholder='Search'
             size='md'
-            borderRadius="md"
-            borderColor="gray.300"
-            _hover={{ borderColor: "gray.400" }}
-            _focus={{ borderColor: "gray.600", boxShadow: "lg" }}
+            border={"2px solid black"}
+            borderRadius={"unset"}
+            _focus={{ outline: "none" }}
           />
         </InputGroup>
       </Flex>
