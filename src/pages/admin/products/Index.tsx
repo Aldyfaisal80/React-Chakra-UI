@@ -1,5 +1,5 @@
 import { Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Input, Icon, InputGroup, InputLeftElement, Tag } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useDeleteProduct, useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
@@ -8,9 +8,10 @@ import Swal from 'sweetalert2';
 import { Product } from "../../../types/Type";
 
 export default function Products() {
+  const {id} = useParams()
   const [page, setPage] = useState(1);
   const { data, loading, error } = useProducts(10, page);
-  const { mutate } = useDeleteProduct();
+  const { mutate } = useDeleteProduct(id);
 
   const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
   const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -51,15 +52,27 @@ export default function Products() {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        mutate(id); 
-        Swal.fire(
-          'Deleted!',
-          'The product has been deleted.',
-          'success'
-        );
+        mutate(id)
+          .then(() => {
+            Swal.fire(
+              'Deleted!',
+              'The product has been deleted.',
+              'success'
+            ).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error: Error) => {
+            Swal.fire(
+              'Error!',
+              `An error occurred while deleting the product: ${error.message}`,
+              'error'
+            );
+          });
       }
     });
   };
+  
 
   return (
     <>
@@ -107,7 +120,7 @@ export default function Products() {
                       <Text fontWeight="medium">{product.name}</Text>
                     </Flex>
                   </Td>
-                  <Td><Tag colorScheme="teal" borderRadius="full">{product.category.name}</Tag></Td>
+                  <Td><Tag colorScheme="teal" borderRadius="full">{product.category?.name}</Tag></Td>
                   <Td>{currencyFormatter.format(product.price)}</Td>
                   <Td display="flex" justifyContent="center" gap={"10px"}>
                     <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/dashboard/update-product/${product.id}`} 

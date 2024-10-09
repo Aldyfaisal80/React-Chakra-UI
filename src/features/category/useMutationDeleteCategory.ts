@@ -11,10 +11,10 @@ export const useDeleteCategory = () => {
     status: ''
   });
 
-  const mutate = async (data: Category) => {
+  const mutate = async (id: Category) => {
     setState(prev => ({ ...prev, loading: true }));
     try {
-      const response = await axiosInstance.delete(`/categories/${data.id}`);
+      const response = await axiosInstance.delete(`/categories/${id}`);
       setState({
         data: response.data.data,
         loading: false,

@@ -11,10 +11,10 @@ export const useDeleteProduct = (): ProductResponse => {
     status: ''
   });
 
-  const mutate = async (data: Product) => {
+  const mutate = async (id: Product) => {
       setState(prev => ({ ...prev, loading: true }));
       try {
-        const response = await axiosInstance.delete(`/products/${data.id}`);
+        const response = await axiosInstance.delete(`/products/${id}`);
         setState({
           data: response.data.data,
           loading: false,
