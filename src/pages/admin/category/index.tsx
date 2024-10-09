@@ -1,18 +1,14 @@
 import { Button, Flex, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Input, Icon, InputGroup, InputLeftElement, Tag } from "@chakra-ui/react";
-import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import ButtonCard from "../../../components/elements/ButtonCard";
 import { FaSearch } from "react-icons/fa";
 import { useCategories, useDeleteCategory } from "../../../features/category";
-import Swal from "sweetalert2";
-import { Category as CategoryType } from "../../../types/Type";
 
 export default function Category() {
   const [page, setPage] = useState(1);
   const {data,error,loading,message,status} = useCategories(10, page);
-  const { id } = useParams()
-  const {mutate} = useDeleteCategory(id);
-  const navigate = useNavigate();
+  // const {} = useDeleteCategory();
 
   const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
 
@@ -43,40 +39,6 @@ export default function Category() {
   const category = data?.data?.categories || [];
   const totalPagesCount = data?.totalPages || 1;
 
-  const handleDelete = (id: CategoryType) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        mutate(id)
-          .then(() => {
-            Swal.fire(
-              'Deleted!',
-              'The category has been deleted.',
-              'success'
-            ).then(() => {
-              window.location.reload();
-            });
-          })
-          .catch((error: Error) => {
-            Swal.fire(
-              'Error!',
-              `An error occurred while deleting the category: ${error.message}`,
-              'error'
-            );
-          });
-      }
-    });
-  };
-  
-  
-  
 
   return (
     <>
@@ -126,7 +88,7 @@ export default function Category() {
                     />
                     {/* <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/dashboard/detail-category/${category.id}`}
                     /> */}
-                    <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => handleDelete(category.id)}
+                    <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => mutate(category.id)}
                     />
                   </Td>
                 </Tr>
