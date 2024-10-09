@@ -6,11 +6,20 @@ export type Product = {
     category_id: string;
     image: string;
     category?: Category;
+    totalPages: number;
+    data?: {
+        name: string;
+        price: number;
+        description: string;
+        category_id: string;
+        image: string;
+        products: Product[]
+    }
 }
 
 
 export type ProductResponse = {
-    mutate: (data: Product) => Promise<void>;
+    mutate: (data: Product, id?: string) => Promise<void>;
     data: Product | null;
     loading: boolean;
     error: Error | null;
