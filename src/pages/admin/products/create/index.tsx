@@ -10,14 +10,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const ProductSchema = z.object({
   name: z.string()
-    .min(5, "Minimal 5 characters")
-    .max(50, "Maximal 50 characters"),
+    .min(5, "Name is too short min 5 characters")
+    .max(50, "Name is too long max 50 characters"),
   price: z.number()
-    .min(1000, "Minimal 1000")
-    .max(10000000, "Maximal 10000000"),
+    .min(1, "Price is required")
+    .max(10000, "Price is too high"),
   description: z.string()
-    .min(5, "Minimal 5 characters")
-    .max(100, "Maximal 100 characters"),
+    .min(10, "Description is too short min 5 characters")
+    .max(250, "Description is too long max 250 characters"),
   category_id: z.string().nonempty("Category is required"),
   image: z.string().url("Invalid image URL")
 });
