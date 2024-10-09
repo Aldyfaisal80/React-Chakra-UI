@@ -1,17 +1,13 @@
 export type Product = {
-    id?: string;
     name: string;
+    id?: string;
+    price: number;
     description: string;
     category_id: string;
     image: string;
-    price: number;
-    category: Category    
-    totalPages?: number;
-    data? : {
-        Product: Product[];
-        products: Product[];
-    }
+    category?: Category;
 }
+
 
 export type ProductResponse = {
     mutate: (data: Product) => Promise<void>;
@@ -23,11 +19,12 @@ export type ProductResponse = {
 }
 
 export type Category = {
-    id?: string,
-    name: string,
-    description: string
-    data: Product[]
-    products: Product[]
+    id?: string;
+    name: string;
+    description: string;
+    data: Product[];
+    products: Product[];
+    categories: Category[];
 }
 
 export type CategoryResponse = {
