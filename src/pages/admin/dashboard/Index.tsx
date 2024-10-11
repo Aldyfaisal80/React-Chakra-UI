@@ -1,22 +1,5 @@
-import {
-  Box,
-  Flex,
-  Text,
-  Button,
-  Heading,
-  HStack,
-  IconButton,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Badge,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import { FaBell } from 'react-icons/fa';
+import { Box, Flex, Text, Button, Heading, HStack, IconButton, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Badge, useColorModeValue, Icon, } from '@chakra-ui/react';
+import { FaArrowDown, FaArrowUp, FaBell, FaFileAlt } from 'react-icons/fa';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import ButtonPrimary from '../../../components/elements/ButtonPrimary';
 
@@ -40,33 +23,24 @@ export default function Dashboard() {
   return (
     <Flex h="100vh" bg={bgColor}>
 
-      {/* Main Content */}
       <Flex flex="1" direction="column" p={8}>
-        {/* Top Bar */}
         <HStack justifyContent="space-between" mb={8}>
           <Heading>Dashboard</Heading>
           <HStack>
             <IconButton icon={<FaBell />} bg={"#FE90E7"} w={12} h={12} aria-label="Notifications" border={"2px solid black"} borderRadius={"unset"} _hover={{
-                boxShadow: "4px 4px 0px rgba(0, 0, 0, 1)",
-            }}/>
+              boxShadow: "4px 4px 0px rgba(0, 0, 0, 1)",
+            }} />
             <ButtonPrimary text="Add Product" to="/dashboard/create-product" />
           </HStack>
         </HStack>
 
-        {/* Charts Section */}
         <Flex mb={8}>
-          <Box
-            w="70%"
-            bg="white"
-            border="2px solid black"
-            boxShadow="8px 8px 0px 0px black"
-            p={4}
-            mr={4}
-          >
+          <Box w="80%" bg="white" border="2px solid black" boxShadow="8px 8px 0px 0px black" p={4} mr={4}>
             <Heading size="md" mb={4}>
               Sales Overview
+              <Box borderBottom={"2px dashed black"} mt={4}></Box>
             </Heading>
-            <LineChart width={800} height={300} data={data}>
+            <LineChart width={950} height={300} data={data}>
               <CartesianGrid strokeDasharray="3 3" stroke="#000" />
               <XAxis dataKey="name" stroke="#000" />
               <YAxis stroke="#000" />
@@ -77,29 +51,60 @@ export default function Dashboard() {
             </LineChart>
           </Box>
 
-          <Box
-            w="30%"
-            bg="white"
-            border="2px solid black"
-            boxShadow="8px 8px 0px 0px black"
-            p={4}
-          >
+          <Box bg="white" border="2px solid black" boxShadow="8px 8px 0px 0px black" p={4} w="300px" h="auto">
             <Heading size="md" mb={4}>
               Financial Overview
+              <Box borderBottom={"2px dashed black"} mt={4}></Box>
             </Heading>
-            <Text fontSize="lg" fontWeight="bold">
-              Money in: $60,930.50
-            </Text>
-            <Text fontSize="lg" fontWeight="bold">
-              Money out: $42,890.30
-            </Text>
-            <Button mt={4} colorScheme="purple">
+
+            <Flex justifyContent="space-between" alignItems="center" mb={4}>
+              <Box>
+                <Text fontSize="lg" fontWeight="bold">
+                  Money in
+                </Text>
+                <Text fontSize="2xl" fontWeight="bold">
+                  $60,930.50
+                </Text>
+                <Text fontSize="sm" color="gray.500">
+                  Total amount you gained
+                </Text>
+              </Box>
+              <Flex alignItems="center">
+                <Badge colorScheme="red" fontSize="md" p={2} borderRadius="md">
+                  -14%
+                </Badge>
+                <Icon as={FaArrowDown} color="red.500" ml={1} />
+              </Flex>
+            </Flex>
+
+            <Box borderBottom="2px dashed black" mb={4} />
+
+            <Flex justifyContent="space-between" alignItems="center" mb={4}>
+              <Box>
+                <Text fontSize="lg" fontWeight="bold">
+                  Money out
+                </Text>
+                <Text fontSize="2xl" fontWeight="bold">
+                  $42,890.30
+                </Text>
+                <Text fontSize="sm" color="gray.500">
+                  Total amount you spent
+                </Text>
+              </Box>
+              <Flex alignItems="center">
+                <Badge colorScheme="green" fontSize="md" p={2} borderRadius="md">
+                  +16%
+                </Badge>
+                <Icon as={FaArrowUp} color="green.500" ml={1} />
+              </Flex>
+            </Flex>
+
+            <Button width="100%" mt={4} bg="gray.100" border="2px solid black" leftIcon={<FaFileAlt />}>
               Financial Report
             </Button>
           </Box>
         </Flex>
 
-        {/* User Table */}
         <TableContainer bg="white" mt="10px" borderRadius="unset" boxShadow="8px 8px 0px 0px black">
           <Table variant="simple" border="2px solid black">
             <Thead bg="gray.50">
@@ -132,7 +137,6 @@ export default function Dashboard() {
             </Tbody>
           </Table>
         </TableContainer>
-
       </Flex>
     </Flex>
   );
