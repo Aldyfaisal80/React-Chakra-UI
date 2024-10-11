@@ -1,17 +1,18 @@
-import { Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Input, Icon, InputGroup, InputLeftElement, Tag } from "@chakra-ui/react";
-import { Link as RouterLink, useParams } from "react-router-dom";
-import { useState } from "react";
+import { Button, Flex, Image, Text, Spinner, Alert, TableContainer, Table, Thead, Tr, Th, Tbody, Td, Stack, Input, Icon, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useDeleteProduct, useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
-import { FaSearch } from "react-icons/fa";
-import Swal from 'sweetalert2';  
+import { FaSearch } from "react-icons/fa"; 
+import Swal from 'sweetalert2';
 import { Product } from "../../../types/Type";
+import Pagination from "../../../components/elements/Pagination";
 
 export default function Products() {
-  const {id} = useParams()
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { data, loading, error } = useProducts(10, page);
-  const { mutate } = useDeleteProduct(id);
+  const { mutate } = useDeleteProduct();
 
   const rowIndex = (index: number) => (page - 1) * 10 + (index + 1);
   const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -19,6 +20,10 @@ export default function Products() {
     currency: 'USD',
     minimumFractionDigits: 2,
   });
+
+  useEffect(() => {
+    navigate(`/dashboard/products?page=${page}`);
+  }, [page, navigate]);
 
   if (loading) {
     return (
@@ -72,34 +77,38 @@ export default function Products() {
       }
     });
   };
-  
+
+  const handlePageChange = (pageNumber: number) => {
+    setPage(pageNumber);
+  };
 
   return (
     <>
       <Flex justifyContent={"space-between"} mb={4} alignItems="center">
         <Stack spacing={3} direction="row">
-        <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Filters</Button>
-          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Products</Button>
-          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Categories</Button>
-          <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>A-Z</Button>
+          <Button variant="outline" _hover={{ boxShadow: "md" }} colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Filters</Button>
+          <Button variant="outline" _hover={{ boxShadow: "md" }} colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Products</Button>
+          <Button variant="outline" _hover={{ boxShadow: "md" }} colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>All Categories</Button>
+          <Button variant="outline" _hover={{ boxShadow: "md" }} colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"}>A-Z</Button>
         </Stack>
-        <InputGroup w={"400px"} bg={"white"}>
+        <InputGroup w={"400px"} bg={"white"} borderRadius={"unset"}>
           <InputLeftElement pointerEvents="none">
             <Icon as={FaSearch} color="gray.400" />
           </InputLeftElement>
           <Input
             placeholder='Search'
             size='md'
-            borderRadius="md"
-            borderColor="gray.300"
-            _hover={{ borderColor: "gray.400" }}
+            border={"2px solid"}
+            borderRadius={"unset"}
+            borderColor="black"
+            _hover={{ boxShadow: "md" }}
             _focus={{ borderColor: "gray.600", boxShadow: "lg" }}
           />
         </InputGroup>
       </Flex>
 
-      <TableContainer bg={"white"} mt={"10px"} boxShadow="md" borderRadius={"unset"} >
-        <Table variant= "simple" border={"2px solid black"}>
+      <TableContainer bg={"white"} mt={"10px"} boxShadow="md" borderRadius={"unset"}>
+        <Table variant="simple" border={"2px solid black"}>
           <Thead bg="gray.50">
             <Tr>
               <Th>NO</Th>
@@ -120,15 +129,12 @@ export default function Products() {
                       <Text fontWeight="medium">{product.name}</Text>
                     </Flex>
                   </Td>
-                  <Td><Tag colorScheme="teal" borderRadius="full">{product.category?.name}</Tag></Td>
+                  <Td fontWeight="medium">{product.category?.name}</Td>
                   <Td>{currencyFormatter.format(product.price)}</Td>
                   <Td display="flex" justifyContent="center" gap={"10px"}>
-                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/dashboard/update-product/${product.id}`} 
-                    />
-                    <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/dashboard/detail-product/${product.id}`}
-                    />
-                    <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => handleDelete(product.id)}
-                    />
+                    <ButtonCard text="Update" bgColor="#FF9900" color="white" _hover={{ bgColor: "purple.700" }} as={RouterLink} to={`/dashboard/update-product/${product.id}`} />
+                    <ButtonCard text="Detail" bgColor="#FE90E7" color="white" _hover={{ bgColor: "blue.600" }} as={RouterLink} to={`/dashboard/detail-product/${product.id}`} />
+                    <ButtonCard text="Delete" bgColor="red.500" color="white" _hover={{ bgColor: "red.600" }} onClick={() => handleDelete(product.id)} />
                   </Td>
                 </Tr>
               ))
@@ -141,23 +147,7 @@ export default function Products() {
         </Table>
       </TableContainer>
 
-      <Flex justifyContent="space-between" mt={4}>
-        <Button
-          isDisabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          bg="gray.200"
-          color="black"
-          _hover={{ bg: "gray.300" }}
-          borderRadius="md"
-        >
-          Prev
-        </Button>
-        <Text fontWeight="bold">Page {page} of {totalPagesCount}</Text>
-        <Button isDisabled={page === totalPagesCount} onClick={() => setPage(page + 1)} bg="gray.200" color="black" _hover={{ bg: "gray.300" }} borderRadius="md"
-        >
-          Next
-        </Button>
-      </Flex>
+      <Pagination currentPage={page} totalPagesCount={totalPagesCount} onPageChange={handlePageChange} />
     </>
   );
 }

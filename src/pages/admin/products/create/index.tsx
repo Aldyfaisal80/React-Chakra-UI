@@ -40,7 +40,7 @@ export default function CreateProduct() {
     }
   });
 
-  const { data } = useCategories(50, 1);
+  const { data } = useCategories(99, 1);
   const navigate = useNavigate();
   const toast = useToast();
   const { mutate, loading } = useCreateProduct();
