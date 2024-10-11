@@ -89,8 +89,13 @@ export default function Section3() {
                                         <Text mt={2} fontWeight="bold" w={"250px"} fontSize="lg">
                                             {product.name}
                                         </Text>
+
                                         <Text fontSize="md" as={RouterLink} to={`/categories/${product.category.id}`}>
                                             {product.category.name}
+
+                                        <Text fontSize="md">
+                                            {product?.category?.name}
+
                                         </Text>
                                         <Text fontSize="md">
                                             Price: ${product.price}
