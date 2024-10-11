@@ -1,19 +1,24 @@
 import { Box, Button, Flex, Grid, GridItem, Image, Text, Spinner, Alert, Heading, Card, CardBody, CardFooter, ButtonGroup } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import { useState } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useProducts } from "../../../features/product";
 import ButtonCard from "../../../components/elements/ButtonCard";
 import { useCategories } from './../../../features/category/useCategories';
+import Pagination from "../../../components/elements/Pagination";
 
 export default function Section3() {
     const [page, setPage] = useState(1);
-    const { data, loading, error } = useProducts(12, page);
+    const { data, loading, error } = useProducts(8, page);
     const { data: categories } = useCategories(50, 1);
-    console.log(categories?.data?.categories);
+    const navigate = useNavigate();
+
 
     const products = data?.data?.products || [];
-    console.log(products);
     const totalPages = data?.totalPages || 1;
+
+    useEffect(() => {
+        navigate(`/?page=${page}`);
+    }, [page, navigate]);
 
     if (loading) {
         return (
@@ -30,6 +35,10 @@ export default function Section3() {
             </Flex>
         );
     }
+
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    };
 
     return (
         <Box py={"50px"} borderBottom={"2px"} borderColor={"gray.600"}>
@@ -62,14 +71,14 @@ export default function Section3() {
             >
                 {categories?.data?.categories.map((category) => (
                     <ButtonGroup size="lg" key={category.id} gap="20px" display="flex">
-                    <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"} px={"25px"} py={"20px"}>
-                      <Text>{category.name}</Text>
-                    </Button>
-                  </ButtonGroup>
+                        <Button variant="outline" colorScheme="gray" bg={"white"} size="md" border={"2px solid black"} borderRadius={"unset"} px={"25px"} py={"20px"}>
+                            <Text>{category.name}</Text>
+                        </Button>
+                    </ButtonGroup>
                 ))}
             </Box>
 
-            <Flex w="100%" h="max-content" justifyContent="center" alignItems="center" mt={"50px"}>
+            <Flex w="100%" h="max-content" justifyContent="center" alignItems="center" my={"50px"}>
                 <Grid templateColumns="repeat(4, 1fr)" w="80%" h="fit-content" gap={6} justifyContent="center" mx="auto">
                     {products.map((product) => (
                         <GridItem key={product.id} w="100%" h="auto" border="2px solid black" _hover={{ boxShadow: "8px 8px 0px 0px rgba(0, 0, 0, 1)" }} transition="box-shadow 0.3s ease-in-out">
@@ -80,8 +89,13 @@ export default function Section3() {
                                         <Text mt={2} fontWeight="bold" w={"250px"} fontSize="lg">
                                             {product.name}
                                         </Text>
+
+                                        <Text fontSize="md" as={RouterLink} to={`/categories/${product.category.id}`}>
+                                            {product.category.name}
+
                                         <Text fontSize="md">
-                                            Category: {product?.category?.name}
+                                            {product?.category?.name}
+
                                         </Text>
                                         <Text fontSize="md">
                                             Price: ${product.price}
@@ -99,17 +113,7 @@ export default function Section3() {
                 </Grid>
             </Flex>
 
-            <Flex display={"flex"} justifyContent={"center"} alignItems={"center"} mt={6}>
-                <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
-                    Previous
-                </Button>
-                <Text mx={4}>
-                    Page {page} of {totalPages}
-                </Text>
-                <Button onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))} disabled={page === totalPages}>
-                    Next
-                </Button>
-            </Flex>
+            <Pagination currentPage={page} totalPagesCount={totalPages} onPageChange={handlePageChange} />
         </Box>
     );
 }
